@@ -13,12 +13,12 @@ class ViewHolder(private val binding: CategoryBinding) :
     fun bind(item: CatItemRlm) {
 
 
-        binding.message.text= item.name
+        binding.categoryText .text= item.name
 
 
         Glide.with(itemView)
             .load( item.icon)
-            .into(binding.messengerImageView)
+            .into(binding.categoryIcon)
 
 
       /*  binding.message.text = item.text
