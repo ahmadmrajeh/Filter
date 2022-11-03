@@ -1,4 +1,4 @@
-package com.example.filter.categAndSub
+package com.example.filter.model.categAndSub
 
 data class SooqFilterModel(
     val result: Result,

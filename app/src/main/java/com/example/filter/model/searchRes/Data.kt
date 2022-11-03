@@ -1,4 +1,4 @@
-package com.example.filter.searchRes
+package com.example.filter.model.searchRes
 
 data class Data(
     val fields_labels: List<FieldsLabel>,

@@ -1,4 +1,4 @@
-package com.example.filter.options
+package com.example.filter.model.options
 
 data class Data(
     val fields: List<Field>,

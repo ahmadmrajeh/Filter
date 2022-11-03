@@ -1,4 +1,4 @@
-package com.example.filter.searchRes
+package com.example.filter.model.categAndSub
 
 data class Result(
     val `data`: Data,

@@ -1,6 +1,6 @@
-package com.example.filter.categAndSub
+package com.example.filter.model.categAndSub
 
-data class SubCategory(
+data class Item(
     val has_child: Int,
     val icon: String,
     val id: Int,
@@ -10,5 +10,6 @@ data class SubCategory(
     val name: String,
     val order: Int,
     val parent_id: Int,
-    val reporting_name: String
+    val reporting_name: String,
+    val subCategories: List<SubCategory>
 )
