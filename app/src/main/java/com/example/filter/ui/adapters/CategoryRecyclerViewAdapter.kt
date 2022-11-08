@@ -7,16 +7,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.filter.R
 import com.example.filter.databinding.CategoryBinding
-import com.example.filter.realm.category.CatItemRlm
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
 
 internal class CategoryRecyclerViewAdapter(
-    data: OrderedRealmCollection<CatItemRlm?>?,
+    data: OrderedRealmCollection<com.example.datascource.realm.category.CatItemRlm?>?,
     listener: (id: Int) -> Unit
 ) :
-    RealmRecyclerViewAdapter<CatItemRlm?, RecyclerView.ViewHolder>(data, true) {
+    RealmRecyclerViewAdapter<com.example.datascource.realm.category.CatItemRlm?, RecyclerView.ViewHolder>(data, true) {
     private var TAG = "REALM_RECYCLER_ADAPTER"
     var adapterListener: (id: Int) -> Unit = listener
 
@@ -24,7 +23,7 @@ internal class CategoryRecyclerViewAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.category, parent, false)
         val binding = CategoryBinding.bind(view)
-        return ViewHolder(binding)
+        return CategoryViewHolder(binding)
     }
 
 
@@ -33,10 +32,10 @@ internal class CategoryRecyclerViewAdapter(
         Log.i(TAG, "Binding view holder: ${obj?.name}")
 
         if (obj != null) {
-            (holder as ViewHolder).bind(obj)
+            (holder as CategoryViewHolder).bind(obj)
         }
 
-        (holder as ViewHolder).itemView.setOnClickListener {
+        (holder as CategoryViewHolder).itemView.setOnClickListener {
             adapterListener(position)
         }
     }

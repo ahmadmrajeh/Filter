@@ -1,55 +1,49 @@
 package com.example.filter.ui.adapters.nestead
 
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.datascource.realm.filter.FieledRealm
 import com.example.filter.R
-/*
+import com.example.filter.databinding.ChildItemBinding
+import com.example.filter.databinding.ParentItemBinding
+import com.example.filter.ui.adapters.nestead.childs.ChildHolderOne
+import io.realm.OrderedRealmCollection
+import io.realm.RealmRecyclerViewAdapter
 
-open class ParentHouseAdapter :
-    RecyclerView.Adapter<ParentHouseAdapter.DataViewHolder>() {
-    var gameOfThronesHouseList: List<GameOfThrones> = ArrayList()
-    var onItemClick: ((GameOfThrones) -> Unit)? = null
+
+internal class ParentAdapter (data: OrderedRealmCollection<FieledRealm?>?, listener:   (id: Int) -> Unit ) :
+    RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
+
+    var adapterListener: (id: Int) -> Unit = listener
 
 
-    inner class DataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-            itemView.setOnClickListener {
-                onItemClick?.invoke(gameOfThronesHouseList[adapterPosition])
-            }
-        }
-
-        fun bind(result: GameOfThrones) {
-            itemView.content_title.text = result.name
-            val childMembersAdapter = ChildMembersAdapter(result.members)
-            itemView.child_recycler_view.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL,false)
-            itemView.child_recycler_view.adapter = childMembersAdapter
-
-        }
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(R.layout.parent_item, parent, false)
+        val binding = ParentItemBinding.bind(view)
+        return ParentHolder(binding,adapterListener)
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DataViewHolder(
-        LayoutInflater.from(parent.context).inflate(
-            R.layout.item_row_parent, parent,
-            false
-        )
-    )
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val obj = getItem(position)
+        Log.i("TAG", "Binding view holder: ${obj?.name}")
 
-    override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
-        holder.bind(gameOfThronesHouseList[position])
+        (holder as ParentHolder).bind(obj)
+
+
+        /*     (holder as ChildHolderOne).itemView.setOnClickListener{
+                 adapterListener(position)
+             }*/
+
     }
 
-    override fun getItemCount(): Int = gameOfThronesHouseList.size
-
-
-    fun addData(list: List<GameOfThrones>) {
-        gameOfThronesHouseList = list
-        notifyDataSetChanged()
+    override fun getItemId(index: Int): Long {
+        return getItem(index)!!.id!!.toLong()
     }
 
 
-} */
+
+}

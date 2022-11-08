@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.filter.R
 import com.example.filter.databinding.SubCategoryBinding
-import com.example.filter.realm.category.SubCatRealm
+import com.example.datascource.realm.category.SubCatRealm
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 

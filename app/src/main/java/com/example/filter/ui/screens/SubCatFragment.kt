@@ -12,7 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.filter.databinding.FragmentSubCatBinding
 
-import com.example.filter.realm.category.SubCatRealm
+import com.example.datascource.realm.category.SubCatRealm
 import com.example.filter.ui.MainViewModel
 import com.example.filter.ui.adapters.sub.SubCategoryAdapter
 import io.realm.RealmList
@@ -61,11 +61,6 @@ class SubCatFragment : Fragment() {
                 binding.subCategoryRecycler.adapter = mAdapter
                 binding.subCategoryRecycler.layoutManager = LinearLayoutManager(requireContext())
             }
-
-
         }
-
-
     }
-
 }
