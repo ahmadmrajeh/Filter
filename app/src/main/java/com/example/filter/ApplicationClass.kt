@@ -10,7 +10,7 @@ class ApplicationClass: Application() {
     override fun onCreate() {
         super.onCreate()
         Realm.init (this)
-        val config = RealmConfiguration.Builder().schemaVersion(5).modules(
+        val config = RealmConfiguration.Builder().schemaVersion(6).modules(
             AppModules()
         )
             .deleteRealmIfMigrationNeeded()

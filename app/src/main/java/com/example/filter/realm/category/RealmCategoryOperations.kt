@@ -1,4 +1,4 @@
-package com.example.filter.realm
+package com.example.filter.realm.category
 
 
 import android.util.Log
@@ -10,8 +10,7 @@ import io.realm.RealmList
 import io.realm.kotlin.executeTransactionAwait
 import kotlinx.coroutines.Dispatchers
 
-   class RealmOperations {
-
+   class RealmCategoryOperations {
 
     suspend fun insertListIntoRealm(itemToDatabase: Data, db: Realm)  {
 
@@ -27,15 +26,12 @@ import kotlinx.coroutines.Dispatchers
                 it.insertOrUpdate(categories)
 
             }
+
         Log.e("inserts","it inserts")
         } catch (e: Exception) {
         Log.e("realm insert error",e.message.toString())
         }
-
-
-
-
-        }
+     }
 
     private fun responseToRlms(itemToDatabase: List<Item>):
             RealmList<CatItemRlm> {
@@ -61,7 +57,8 @@ import kotlinx.coroutines.Dispatchers
                 element.has_child,element.icon,
                 element.id, element.label, element.label_ar,element.label_en, element.name
             ,element.order, element.parent_id, element.reporting_name
-            ))
+              )
+            )
         }
 
       return  itemInRealm

@@ -4,3 +4,4 @@ data class SearchFlow(
     val category_id: Int,
     val order: List<String>
 )
+

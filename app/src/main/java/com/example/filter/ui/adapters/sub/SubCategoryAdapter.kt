@@ -1,4 +1,4 @@
-package com.example.filter.ui.adapters
+package com.example.filter.ui.adapters.sub
 
 
 import android.util.Log
@@ -6,25 +6,25 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.filter.R
-import com.example.filter.databinding.CategoryBinding
-import com.example.filter.realm.category.CatItemRlm
+import com.example.filter.databinding.SubCategoryBinding
+import com.example.filter.realm.category.SubCatRealm
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
 
-internal class CategoryRecyclerViewAdapter(
-    data: OrderedRealmCollection<CatItemRlm?>?,
+internal class SubCategoryAdapter(
+    data: OrderedRealmCollection<SubCatRealm?>?,
     listener: (id: Int) -> Unit
 ) :
-    RealmRecyclerViewAdapter<CatItemRlm?, RecyclerView.ViewHolder>(data, true) {
+    RealmRecyclerViewAdapter<SubCatRealm?, RecyclerView.ViewHolder>(data, true) {
     private var TAG = "REALM_RECYCLER_ADAPTER"
     var adapterListener: (id: Int) -> Unit = listener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.category, parent, false)
-        val binding = CategoryBinding.bind(view)
-        return ViewHolder(binding)
+        val binding = SubCategoryBinding.bind(view)
+        return SubViewHolder(binding)
     }
 
 
@@ -33,11 +33,11 @@ internal class CategoryRecyclerViewAdapter(
         Log.i(TAG, "Binding view holder: ${obj?.name}")
 
         if (obj != null) {
-            (holder as ViewHolder).bind(obj)
+            (holder as SubViewHolder).bind(obj)
         }
 
-        (holder as ViewHolder).itemView.setOnClickListener {
-            adapterListener(position)
+        (holder as SubViewHolder).itemView.setOnClickListener {
+          adapterListener(obj!!.id)
         }
     }
 

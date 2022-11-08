@@ -1,17 +1,17 @@
-package com.example.filter.ui.adapters
+package com.example.filter.ui.adapters.sub
 
-import androidx.recyclerview.widget.RecyclerView
+ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+ import com.example.filter.databinding.SubCategoryBinding
 
-import com.example.filter.databinding.CategoryBinding
-import com.example.filter.realm.category.CatItemRlm
+ import com.example.filter.realm.category.SubCatRealm
 import java.util.*
 
-class ViewHolder(private val binding: CategoryBinding) :
+class SubViewHolder(private val binding: SubCategoryBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
 
-    fun bind(item: CatItemRlm) {
+    fun bind(item: SubCatRealm) {
 
 
         selectLabelLanguage(item)
@@ -26,7 +26,7 @@ class ViewHolder(private val binding: CategoryBinding) :
 
     }
 
-    private fun selectLabelLanguage(item: CatItemRlm) {
+    private fun selectLabelLanguage(item: SubCatRealm) {
         if (Locale.getDefault().displayLanguage == "English") {
             binding.categoryText.text = item.label_en
         } else {

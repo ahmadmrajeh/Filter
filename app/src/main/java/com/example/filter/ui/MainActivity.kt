@@ -3,25 +3,32 @@ package com.example.filter.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.example.filter.R
+import android.view.MenuItem
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.filter.databinding.ActivityMainBinding
-import com.example.filter.databinding.FragmentMainBinding
-import com.example.filter.model.categAndSub.SooqFilterModel
-import com.example.filter.utils.JsonMockApi.Companion.getJsonDataFromAsset
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class MainActivity : AppCompatActivity() {
 private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-        binding=ActivityMainBinding.inflate(layoutInflater)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
     }
 
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+       onBackPressed()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
 
 

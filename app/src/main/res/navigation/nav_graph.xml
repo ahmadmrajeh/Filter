@@ -7,7 +7,32 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.filter.ui.MainFragment"
+        android:name="com.example.filter.ui.screens.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_subCatFragment"
+            app:destination="@id/subCatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subCatFragment"
+        android:name="com.example.filter.ui.screens.SubCatFragment"
+        android:label="fragment_sub_cat"
+        tools:layout="@layout/fragment_sub_cat" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_subCatFragment_to_filterFragment2"
+            app:destination="@id/filterFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/filterFragment"
+        android:name="com.example.filter.ui.screens.FilterFragment"
+        android:label="fragment_filter"
+        tools:layout="@layout/fragment_filter" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

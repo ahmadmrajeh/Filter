@@ -1,6 +1,5 @@
-package com.example.filter.realm
+package com.example.filter.realm.category
 
-import com.example.filter.model.categAndSub.SubCategory
 import io.realm.RealmList
 import io.realm.RealmObject
 

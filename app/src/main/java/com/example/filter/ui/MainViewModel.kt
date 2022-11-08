@@ -1,85 +1,117 @@
 package com.example.filter.ui
 
- import android.content.Context
- import android.util.Log
- import androidx.lifecycle.MutableLiveData
- import androidx.lifecycle.ViewModel
- import androidx.lifecycle.viewModelScope
- import com.example.filter.model.categAndSub.SooqFilterModel
- import com.example.filter.model.options.OptionsResponse
- import com.example.filter.model.searchRes.SearchRes
- import com.example.filter.realm.ResultCatRealm
- import com.example.filter.repository.Repository
- import com.example.filter.utils.JsonMockApi
+import android.content.Context
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.filter.model.categAndSub.SooqFilterModel
+import com.example.filter.model.options.OptionsResponse
+import com.example.filter.model.searchRes.SearchRes
+import com.example.filter.realm.category.ResultCatRealm
+import com.example.filter.realm.filter.FilterSubCategory
+import com.example.filter.repository.Repository
+import com.example.filter.utils.JsonMockApi
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
- import io.realm.Realm
- import io.realm.RealmList
- import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.launch
+import io.realm.Realm
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-var repository = Repository()
+    var repository = Repository()
 
     var result: MutableLiveData<ResultCatRealm> = MutableLiveData()
+    var resultFilter: MutableLiveData<FilterSubCategory> = MutableLiveData()
 
-     fun optionJsonToKotlin(applicationContext: Context): OptionsResponse {
-        val jsonFileString = JsonMockApi.getJsonDataFromAsset(applicationContext
-            , "dynamic.json")
-        Log.i("data", jsonFileString!!)
+    private fun optionJsonToKotlin(applicationContext: Context, orderedFields: SearchRes, id: Int) {
+        val jsonFileString = JsonMockApi.getJsonDataFromAsset(
+            applicationContext, "dynamic.json"
+        )
+
         val gson = Gson()
-        val  type = object : TypeToken<OptionsResponse>() {}.type
-        return gson.fromJson(jsonFileString, type)
+        val type = object : TypeToken<OptionsResponse>() {}.type
+
+        val optionsAndFields: OptionsResponse = gson.fromJson(jsonFileString, type)
+
+        offlineCacheFilterFields(optionsAndFields, orderedFields, id)
     }
 
-    fun subFlowJsonToKotlin(applicationContext: Context): SearchRes {
-        val jsonFileString = JsonMockApi.getJsonDataFromAsset(applicationContext,
-            "assign.json")
-        Log.i("data1", jsonFileString!!)
+
+    fun subFlowJsonToKotlin(applicationContext: Context, id: Int) {
+        val jsonFileString = JsonMockApi.getJsonDataFromAsset(
+            applicationContext,
+            "assign.json"
+        )
+
         val gson = Gson()
         val type = object : TypeToken<SearchRes>() {}.type
-        return gson.fromJson(jsonFileString, type)
+        val passedToOptions: SearchRes = gson.fromJson(jsonFileString, type)
+        optionJsonToKotlin(applicationContext, passedToOptions, id)
     }
 
 
-      fun catJsonToKotlin(applicationContext: Context)  {
-        val jsonFileString = JsonMockApi.getJsonDataFromAsset(applicationContext,
-            "categories.json")
+    fun catJsonToKotlin(applicationContext: Context) {
+        val jsonFileString = JsonMockApi.getJsonDataFromAsset(
+            applicationContext,
+            "categories.json"
+        )
 
-        Log.i("data2", jsonFileString!!)
         val gson = Gson()
         val type = object : TypeToken<SooqFilterModel>() {}.type
-          offlineCache( gson.fromJson(jsonFileString, type))
+        offlineCacheCategories(gson.fromJson(jsonFileString, type))
     }
 
 
-    private fun offlineCache(modelItem: SooqFilterModel) {
-
-        viewModelScope.launch (Dispatchers.IO) {
+    private fun offlineCacheCategories(modelItem: SooqFilterModel) {
+        viewModelScope.launch(Dispatchers.IO) {
             val db = Realm.getDefaultInstance()
-            repository.insertItemToRealm(modelItem,db)
+            repository.insertItemToRealm(modelItem, db)
         }
-
-
     }
 
-    fun readOfflineCache() {
+    private fun offlineCacheFilterFields(
+        optionsAndFields: OptionsResponse,
+        orderedFields: SearchRes,
+        id: Int
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val db = Realm.getDefaultInstance()
+            repository.insertFieldsToRealm(optionsAndFields, orderedFields, db, id)
+        }
+    }
+
+
+    fun readOfflineCacheCategoriesAndSub() {
 
         viewModelScope.launch(Dispatchers.Main) {
 
-            val db: Realm=Realm.getDefaultInstance()
-            val data=db.where(ResultCatRealm::class.java)?.findFirst()
+            val db: Realm = Realm.getDefaultInstance()
+            val data = db.where(ResultCatRealm::class.java)?.findFirst()
 
-            data?.let { result.postValue(it)
+            data?.let {
+                result.postValue(it)
+
             }
         }
-
     }
 
 
+    fun readOfflineCacheFields(id: Int) {
 
-    /* val listPersonType = object : TypeToken<List<SooqFilterModel>>() {}.type
+        viewModelScope.launch(Dispatchers.Main) {
+            val db: Realm = Realm.getDefaultInstance()
+            val data =
+                db.where(FilterSubCategory::class.java)
+                    .equalTo("idSubCategory", id)?.findFirst()
+            data?.let {
+                resultFilter.postValue(it)
 
-     val persons: List<SooqFilterModel> = gson.fromJson(jsonFileString, listPersonType)*/
+
+            }
+
+        }
+    }
+
 
 }

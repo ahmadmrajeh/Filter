@@ -1,4 +1,4 @@
-package com.example.filter.realm
+package com.example.filter.realm.category
 
 import io.realm.RealmObject
 
