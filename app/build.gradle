@@ -43,6 +43,7 @@ android {
 
 
 dependencies {
+
     implementation project(':DataScource')
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -67,12 +68,15 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
 
 
-    //  recyclerview
+    //recyclerview
     implementation 'io.realm:android-adapters:4.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     kapt 'com.github.bumptech.glide:compiler:4.12.0'
+
+//flixbox
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
 
 }

@@ -72,7 +72,9 @@ class RealmFilterOperations {
               returnedList.add(
                   RealmOption(
                       element.field_id,element.has_child,element.id,element.label,
-                      element.label_en,element.option_img,element.order,element.parent_id,element.value
+                      element.label_en,
+                      "https://opensooqui2.os-cdn.com/api/apiV/android/xxh"+element.option_img,
+                      element.order,element.parent_id,element.value
                   )
               )
 

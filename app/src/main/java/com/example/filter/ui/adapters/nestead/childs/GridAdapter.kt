@@ -2,26 +2,29 @@ package com.example.filter.ui.adapters.nestead.childs
 
 import android.util.Log
 import android.view.LayoutInflater
- import android.view.ViewGroup
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
- import com.example.datascource.realm.filter.RealmOption
+import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.R
+import com.example.filter.databinding.ChildGridBinding
 import com.example.filter.databinding.ChildItemBinding
 import com.example.filter.ui.adapters.nestead.childs.viewholders.ChildHolderCircle
+import com.example.filter.ui.adapters.nestead.childs.viewholders.ChildHolderGrid
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
 
-internal class ChildMembersAdapter(data: OrderedRealmCollection<RealmOption?>?, listener:   (id: Int) -> Unit ) :
+
+internal class GridAdapter(data: OrderedRealmCollection<RealmOption?>?, listener:   (id: Int) -> Unit ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
 
     var adapterListener: (id: Int) -> Unit = listener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.child_item, parent, false)
-        val binding = ChildItemBinding.bind(view)
-        return ChildHolderCircle(binding,parent.context)
+        val view = inflater.inflate(R.layout.child_grid, parent, false)
+        val binding = ChildGridBinding.bind(view)
+        return ChildHolderGrid(binding,parent.context)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -29,8 +32,9 @@ internal class ChildMembersAdapter(data: OrderedRealmCollection<RealmOption?>?, 
         val obj = getItem(position)
         Log.i("Binding", "Binding view holder: ${obj?.label}")
 
-        (holder as ChildHolderCircle).bind(obj)
-        (holder as ChildHolderCircle).itemView.setOnClickListener{
+
+        (holder as ChildHolderGrid).bind(obj)
+        (holder as ChildHolderGrid).itemView.setOnClickListener{
             adapterListener(position)
         }
     }

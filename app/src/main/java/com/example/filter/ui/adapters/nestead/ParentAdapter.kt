@@ -6,9 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datascource.realm.filter.FieledRealm
 import com.example.filter.R
-import com.example.filter.databinding.ChildItemBinding
+import com.example.filter.databinding.GridParentBinding
 import com.example.filter.databinding.ParentItemBinding
-import com.example.filter.ui.adapters.nestead.childs.ChildHolderOne
+import com.example.filter.databinding.ParentNumricBinding
+import com.example.filter.ui.adapters.nestead.childs.viewholders.ParentHolder
+import com.example.filter.ui.adapters.nestead.childs.viewholders.ParentHolderGrid
+import com.example.filter.ui.adapters.nestead.childs.viewholders.ParentHolderNumeric
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
@@ -21,9 +24,25 @@ internal class ParentAdapter (data: OrderedRealmCollection<FieledRealm?>?, liste
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.parent_item, parent, false)
-        val binding = ParentItemBinding.bind(view)
-        return ParentHolder(binding,adapterListener)
+        return when (viewType) {
+            VIEW_TYPE_GRID -> {
+
+                val view = inflater.inflate(R.layout.grid_parent, parent, false)
+                val binding = GridParentBinding.bind(view)
+                ParentHolderGrid(binding,adapterListener)
+            }
+            VIEW_TYPE_NUMERIC -> {
+                val view = inflater.inflate(R.layout.parent_numric, parent, false)
+                val binding = ParentNumricBinding.bind(view)
+                ParentHolderNumeric(binding,adapterListener)
+            }
+            else -> {
+                val view = inflater.inflate(R.layout.parent_item, parent, false)
+                val binding = ParentItemBinding.bind(view)
+                ParentHolder(binding,adapterListener)
+            }
+        }
+
     }
 
 
@@ -31,8 +50,18 @@ internal class ParentAdapter (data: OrderedRealmCollection<FieledRealm?>?, liste
         val obj = getItem(position)
         Log.i("TAG", "Binding view holder: ${obj?.name}")
 
-        (holder as ParentHolder).bind(obj)
 
+        when (holder) {
+            is ParentHolder -> {
+                holder.bind(obj)
+            }
+            is ParentHolderNumeric -> {
+                holder.bind(obj)
+            }
+            is ParentHolderGrid -> {
+                holder.bind(obj)
+            }
+        }
 
         /*     (holder as ChildHolderOne).itemView.setOnClickListener{
                  adapterListener(position)
@@ -45,5 +74,19 @@ internal class ParentAdapter (data: OrderedRealmCollection<FieledRealm?>?, liste
     }
 
 
+    override fun getItemViewType(position: Int): Int {
+        val obj = getItem(position)
+        return if (obj?.data_type == "list_string_boolean") VIEW_TYPE_GRID
+        else if (obj?.data_type == "list_string_icon") VIEW_TYPE_ICON_STRING
+        else if (obj?.data_type == "list_numeric") VIEW_TYPE_NUMERIC
+        else VIEW_TYPE_LIST_STRING
+    }
+
+    companion object {
+        const val VIEW_TYPE_LIST_STRING = 1
+        const val VIEW_TYPE_NUMERIC = 2
+        const val VIEW_TYPE_ICON_STRING = 3
+        const val VIEW_TYPE_GRID = 4
+    }
 
 }
