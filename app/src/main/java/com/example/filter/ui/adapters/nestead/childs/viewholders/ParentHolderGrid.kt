@@ -19,9 +19,8 @@ class  ParentHolderGrid(private val binding: GridParentBinding, listener:   (id:
          val childMembersAdapter = GridAdapter(result?.options, adapterListener)
 
         val layoutManager = FlexboxLayoutManager(itemView.context)
-        layoutManager.flexDirection = FlexDirection.COLUMN
-        layoutManager.justifyContent = JustifyContent.FLEX_END
-
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.CENTER
         binding.childRecyclerview.adapter = childMembersAdapter
         binding.childRecyclerview .layoutManager =  layoutManager
     }

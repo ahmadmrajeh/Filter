@@ -18,7 +18,7 @@ var thiscontext =context
    //   binding.constraint.background = ContextCompat.getDrawable(thiscontext, R.drawable.circle_selected_option_bg)
 
 
-binding.textView4.text = item?.label_en
+binding.textView4 .text = item?.label_en
 
 
 

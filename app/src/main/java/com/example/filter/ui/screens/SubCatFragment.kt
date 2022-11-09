@@ -37,6 +37,7 @@ class SubCatFragment : Fragment() {
         observeData()
 
         return binding.root
+
     }
 
     private fun observeData() {
