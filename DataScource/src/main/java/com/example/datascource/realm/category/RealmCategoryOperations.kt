@@ -12,15 +12,21 @@ import kotlinx.coroutines.Dispatchers
 
    class RealmCategoryOperations {
 
-    suspend fun insertListIntoRealm(itemToDatabase: Data, db: Realm)  {
+         fun getCategoryFromJson(itemToDatabase: Data): RealmList<CatItemRlm> {
 
-            val realmResults: RealmList<CatItemRlm> = responseToRlms(itemToDatabase.items)
+           return responseToRlms(itemToDatabase.items)
+       }
+
+           suspend fun insertListIntoRealm(itemToDatabase: RealmList<CatItemRlm>, db: Realm)  {
+
+
+
         try {
 
            db .executeTransactionAwait(Dispatchers.IO){
 
                 val categories = ResultCatRealm().apply {
-                  items=realmResults
+                  items=itemToDatabase
                 }
 
                 it.insertOrUpdate(categories)
@@ -32,6 +38,7 @@ import kotlinx.coroutines.Dispatchers
         Log.e("realm insert error",e.message.toString())
         }
      }
+
 
     private fun responseToRlms(itemToDatabase: List<Item>):
             RealmList<CatItemRlm> {
@@ -62,6 +69,7 @@ import kotlinx.coroutines.Dispatchers
         }
 
       return  itemInRealm
+
     }
 
 

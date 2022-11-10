@@ -3,28 +3,30 @@ package com.example.filter.ui.adapters.nestead.childs.viewholders
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.R
-import com.example.filter.databinding.ChildItemBinding
+import com.example.filter.databinding.ChildItemTextCircleBinding
+import java.util.*
 
 
-class ChildHolderCircle(private val binding: ChildItemBinding,
-                        clickListenerImg: (id: Int) -> Unit) :
+class ChildHolderTextCircle(
+    private val binding: ChildItemTextCircleBinding,
+    adapterListener: (id: Int) -> Unit
+) :
     RecyclerView.ViewHolder(binding.root) {
 
 
     fun bind(item: RealmOption?) {
-        Glide.with(itemView)
-            .load( item?.option_img)
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .circleCrop()
-            .into(binding.imageView)
 
-        binding.root.setOnClickListener {
+
+
+
+        selectLabelLanguage(item)
+
+        binding.root.setOnClickListener{
             selectionState()
-        }
 
+        }
 
 
     }
@@ -37,8 +39,21 @@ class ChildHolderCircle(private val binding: ChildItemBinding,
             binding.ticked.visibility = View.VISIBLE
         } else {
             binding.constraint.background = ContextCompat.getDrawable(
-                itemView.context, R.drawable.circle_option_bg)
+                itemView.context, R.drawable.circle_option_bg
+            )
+
             binding.ticked.visibility = View.INVISIBLE
+
+
         }
     }
+
+    private fun selectLabelLanguage(item:RealmOption?) {
+        if (Locale.getDefault().displayLanguage == "English") {
+            binding.textView2.text = item?.label_en
+        } else {
+            binding.textView2.text = item?.label
+        }
+    }
+
 }

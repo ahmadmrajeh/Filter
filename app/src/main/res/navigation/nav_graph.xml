@@ -34,5 +34,11 @@
         <argument
             android:name="id"
             app:argType="integer" />
+
     </fragment>
+    <fragment
+        android:id="@+id/loadFragment"
+        android:name="com.example.filter.LoadFragment"
+        android:label="fragment_load"
+        tools:layout="@layout/fragment_load" />
 </navigation>

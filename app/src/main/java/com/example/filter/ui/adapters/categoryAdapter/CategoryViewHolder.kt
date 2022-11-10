@@ -1,4 +1,4 @@
-package com.example.filter.ui.adapters
+package com.example.filter.ui.adapters.categoryAdapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,9 +19,6 @@ class CategoryViewHolder(private val binding: CategoryBinding) :
         Glide.with(itemView)
             .load( item.icon)
             .into(binding.categoryIcon)
-
-
-
 
     }
 

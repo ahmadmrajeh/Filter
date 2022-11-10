@@ -1,18 +1,22 @@
 package com.example.filter.ui.screens
 
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.filter.R
 import com.example.filter.databinding.FragmentMainBinding
-import com.example.filter.ui.MainViewModel
-import com.example.filter.ui.adapters.CategoryRecyclerViewAdapter
-
+import com.example.filter.ui.adapters.categoryAdapter.CategoryRecyclerViewAdapter
+import com.example.filter.ui.screens.viewmodel.MainViewModel
 import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,8 +44,12 @@ class MainFragment : Fragment() {
 
     private fun observeData() {
         sharedViewModel.result.observe(viewLifecycleOwner) {
-            rlmRsltList = it.items
+
+             rlmRsltList = it.items
             setUpRecyclerView()
+
+
+
         }
     }
 

@@ -18,8 +18,9 @@ class RealmFilterOperations {
       db: Realm,
       id: Int
     ) {
-            val fieldsRealmList: RealmList<FieledRealm> = RealmList()
-            orderedFieldsToRealm(orderedFields, id, optionsAndFields, fieldsRealmList)
+            val fieldsRealmList: RealmList<FieledRealm> =  getApiFields(optionsAndFields , orderedFields , id )
+
+
 
       db.executeTransactionAwait(Dispatchers.IO) {
                 val filterSubCategory = FilterSubCategory().apply {
@@ -83,5 +84,11 @@ class RealmFilterOperations {
 
       }
         return returnedList
+    }
+
+    fun getApiFields(optionsAndFields: OptionsResponse, orderedFields: SearchRes, id: Int): RealmList<FieledRealm> {
+        val fieldsRealmList: RealmList<FieledRealm> = RealmList()
+        orderedFieldsToRealm(orderedFields, id, optionsAndFields, fieldsRealmList)
+        return fieldsRealmList
     }
 }

@@ -1,16 +1,19 @@
-package com.example.filter.repository
+package com.example.datascource.repository
 
 import com.example.datascource.model.categAndSub.SooqFilterModel
 import com.example.datascource.model.options.OptionsResponse
 import com.example.datascource.model.searchRes.SearchRes
+import com.example.datascource.realm.category.CatItemRlm
 import com.example.datascource.realm.category.RealmCategoryOperations
+import com.example.datascource.realm.filter.FieledRealm
 import com.example.datascource.realm.filter.RealmFilterOperations
 import io.realm.Realm
+import io.realm.RealmList
 
 class Repository {
-    suspend fun insertItemToRealm(atItem: SooqFilterModel, db: Realm ) {
+    suspend fun insertItemToRealm(atItem: RealmList<CatItemRlm>, db: Realm ) {
         val realmCategoryOperations = RealmCategoryOperations()
-        realmCategoryOperations.insertListIntoRealm(atItem.result.data,db)
+        realmCategoryOperations.insertListIntoRealm(atItem ,db)
 
 
     }
@@ -26,5 +29,19 @@ class Repository {
 
 
     }
+    suspend fun getApiFields (
+        optionsAndFields: OptionsResponse,
+        orderedFields: SearchRes,
+        db: Realm,
+        id: Int
+    ): RealmList<FieledRealm> {
+        val realmFilterOperations = RealmFilterOperations()
+      return  realmFilterOperations.getApiFields(optionsAndFields,orderedFields,id)
+    }
+
+ fun apiDataCategory (atItem: SooqFilterModel ): RealmList<CatItemRlm> {
+    val realmCategoryOperations = RealmCategoryOperations()
+  return realmCategoryOperations. getCategoryFromJson(atItem.result.data)
+ }
 
 }

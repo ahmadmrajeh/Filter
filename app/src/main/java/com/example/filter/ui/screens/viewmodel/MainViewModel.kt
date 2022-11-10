@@ -1,25 +1,29 @@
-package com.example.filter.ui
+package com.example.filter.ui.screens.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.datascource.model.options.OptionsResponse
+import com.example.datascource.realm.category.CatItemRlm
 import com.example.datascource.realm.category.ResultCatRealm
 import com.example.datascource.realm.filter.FilterSubCategory
-import com.example.filter.repository.Repository
+import com.example.datascource.repository.Repository
 import com.example.filter.utils.JsonMockApi
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.realm.Realm
+import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 class MainViewModel : ViewModel() {
+    private lateinit var apiDataCategory: RealmList<CatItemRlm>
     var repository = Repository()
     var result: MutableLiveData<ResultCatRealm> = MutableLiveData()
     var resultFilter: MutableLiveData<FilterSubCategory> = MutableLiveData()
+
 
     private fun optionJsonToKotlin(applicationContext: Context, orderedFields: com.example.datascource.model.searchRes.SearchRes, id: Int) {
         val jsonFileString = JsonMockApi.getJsonDataFromAsset(
@@ -64,10 +68,15 @@ class MainViewModel : ViewModel() {
 
     private fun offlineCacheCategories(modelItem: com.example.datascource.model
     .categAndSub.SooqFilterModel) {
+
+
         viewModelScope.launch(Dispatchers.IO) {
+            apiDataCategory = repository.apiDataCategory(modelItem)
             val db = Realm.getDefaultInstance()
-            repository.insertItemToRealm(modelItem, db)
+            repository.insertItemToRealm(apiDataCategory, db)
+
         }
+
     }
 
 
@@ -79,6 +88,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val db = Realm.getDefaultInstance()
             repository.insertFieldsToRealm(optionsAndFields, orderedFields, db, id)
+
         }
     }
 
@@ -93,6 +103,9 @@ class MainViewModel : ViewModel() {
                 result.postValue(it)
 
             }
+
+
+
         }
     }
 
@@ -101,14 +114,17 @@ class MainViewModel : ViewModel() {
 
         viewModelScope.launch(Dispatchers.Main) {
             val db: Realm = Realm.getDefaultInstance()
-            val data =
-                db.where(FilterSubCategory::class.java)
+            val data = db.where(FilterSubCategory::class.java)
                     .equalTo("idSubCategory", id)?.findFirst()
+
+
             data?.let {
+
                 resultFilter.postValue(it)
-
-
             }
+
+
+
 
         }
     }

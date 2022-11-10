@@ -1,4 +1,4 @@
-package com.example.filter.ui.adapters
+package com.example.filter.ui.adapters.categoryAdapter
 
 
 import android.util.Log

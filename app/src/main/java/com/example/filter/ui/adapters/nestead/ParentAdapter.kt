@@ -9,47 +9,49 @@ import com.example.filter.R
 import com.example.filter.databinding.GridParentBinding
 import com.example.filter.databinding.ParentItemBinding
 import com.example.filter.databinding.ParentNumricBinding
-import com.example.filter.ui.adapters.nestead.childs.viewholders.ParentHolder
-import com.example.filter.ui.adapters.nestead.childs.viewholders.ParentHolderGrid
-import com.example.filter.ui.adapters.nestead.childs.viewholders.ParentHolderNumeric
+import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolder
+import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolderGrid
+import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolderNumeric
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
 
-internal class ParentAdapter (data: OrderedRealmCollection<FieledRealm?>?, listener:   (id: Int) -> Unit ) :
+internal class ParentAdapter(
+    data: OrderedRealmCollection<FieledRealm?>?,
+    listener: ArrayList<(id: Int) -> Unit>
+) :
     RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
 
-    var adapterListener: (id: Int) -> Unit = listener
-
+    var listOfListeners: ArrayList<(id: Int) -> Unit> = listener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            VIEW_TYPE_GRID -> {
 
+            VIEW_TYPE_GRID -> {
                 val view = inflater.inflate(R.layout.grid_parent, parent, false)
                 val binding = GridParentBinding.bind(view)
-                ParentHolderGrid(binding,adapterListener)
+                ParentHolderGrid(binding, listOfListeners[0])
             }
+
             VIEW_TYPE_NUMERIC -> {
                 val view = inflater.inflate(R.layout.parent_numric, parent, false)
                 val binding = ParentNumricBinding.bind(view)
-                ParentHolderNumeric(binding,adapterListener)
+                ParentHolderNumeric(binding, listOfListeners[1])
             }
+
             else -> {
                 val view = inflater.inflate(R.layout.parent_item, parent, false)
                 val binding = ParentItemBinding.bind(view)
-                ParentHolder(binding,adapterListener)
+                ParentHolder(binding, listOfListeners[2], listOfListeners[3], viewType)
             }
         }
-
     }
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
         Log.i("TAG", "Binding view holder: ${obj?.name}")
-
 
         when (holder) {
             is ParentHolder -> {
@@ -62,11 +64,6 @@ internal class ParentAdapter (data: OrderedRealmCollection<FieledRealm?>?, liste
                 holder.bind(obj)
             }
         }
-
-        /*     (holder as ChildHolderOne).itemView.setOnClickListener{
-                 adapterListener(position)
-             }*/
-
     }
 
     override fun getItemId(index: Int): Long {

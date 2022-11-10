@@ -7,14 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.filter.databinding.FragmentSubCatBinding
 
 import com.example.datascource.realm.category.SubCatRealm
-import com.example.filter.ui.MainViewModel
+import com.example.filter.R
 import com.example.filter.ui.adapters.sub.SubCategoryAdapter
+import com.example.filter.ui.screens.viewmodel.MainViewModel
 import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,8 +34,12 @@ class SubCatFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().title="Select Subcategory"
         binding = FragmentSubCatBinding.inflate(inflater)
+
+
+
+        requireActivity().title="Select Subcategory"
+
         sharedViewModel.readOfflineCacheCategoriesAndSub()
         observeData()
 

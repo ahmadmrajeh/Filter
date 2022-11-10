@@ -8,15 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.datascource.realm.category.SubCatRealm
 import com.example.datascource.realm.filter.FieledRealm
 import com.example.filter.databinding.FragmentFilterBinding
-import com.example.filter.ui.MainViewModel
 import com.example.filter.ui.adapters.nestead.ParentAdapter
-import com.example.filter.ui.adapters.sub.SubCategoryAdapter
+import com.example.filter.ui.screens.viewmodel.MainViewModel
 import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,13 +24,13 @@ class FilterFragment : Fragment() {
     private lateinit var binding: FragmentFilterBinding
     private lateinit var mAdapter: ParentAdapter
     private lateinit var rlmRsltList: RealmList<FieledRealm>
+    private lateinit var options: List<String>
     private val args: FilterFragmentArgs by navArgs()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-
     ): View {
         binding = FragmentFilterBinding.inflate(inflater)
         Log.e("WORKINDB", args.id.toString())
@@ -61,7 +58,6 @@ class FilterFragment : Fragment() {
     private fun setUpRecyclerView() {
         if (rlmRsltList.isNotEmpty()) {
             mAdapter = ParentAdapter(rlmRsltList) { id ->
-              //handle Selected Items
 
             }
 
@@ -69,6 +65,7 @@ class FilterFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.Main) {
                 binding.RcyclerFilter.adapter = mAdapter
                 binding.RcyclerFilter .layoutManager = LinearLayoutManager(requireContext())
+
             }
         }
     }

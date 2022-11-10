@@ -1,4 +1,4 @@
-package com.example.filter.ui
+package com.example.filter.ui.screens
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,8 +14,6 @@ private lateinit var binding: ActivityMainBinding
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
@@ -24,7 +22,7 @@ private lateinit var binding: ActivityMainBinding
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-       onBackPressed()
+            onBackPressed()
             }
         }
         return super.onOptionsItemSelected(item)
