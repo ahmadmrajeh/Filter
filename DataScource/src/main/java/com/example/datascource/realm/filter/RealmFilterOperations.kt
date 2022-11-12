@@ -53,7 +53,15 @@ class RealmFilterOperations {
            val optionsForCurrentField: List<Option> = optionsAndFields.result.data.options.filter {
                temp!!.id.toString() == it.field_id
            }
-            val realmOptions :RealmList<RealmOption> = changeOptionsTypeToRealm(optionsForCurrentField)
+
+            val realmOptions :RealmList<RealmOption> = RealmList()
+            realmOptions.add(  RealmOption(
+              "-1","1","-1","اي",
+                "Any",
+                null,
+                "",null,null
+            ))
+            realmOptions.addAll(changeOptionsTypeToRealm(optionsForCurrentField))
 
             temp?.let { field->
 

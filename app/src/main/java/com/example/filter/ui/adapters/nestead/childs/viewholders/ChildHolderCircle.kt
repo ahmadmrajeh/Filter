@@ -13,7 +13,6 @@ class ChildHolderCircle(private val binding: ChildItemBinding,
                         clickListenerImg: (id: Int) -> Unit) :
     RecyclerView.ViewHolder(binding.root) {
 
-
     fun bind(item: RealmOption?) {
         Glide.with(itemView)
             .load( item?.option_img)

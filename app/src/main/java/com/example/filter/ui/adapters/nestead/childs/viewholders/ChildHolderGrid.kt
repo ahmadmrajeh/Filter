@@ -12,8 +12,6 @@ class ChildHolderGrid(private val binding: ChildGridBinding ) :
     RecyclerView.ViewHolder(binding.root) {
 
 
-
-
     fun bind(item: RealmOption?) {
 
 binding.root.setOnClickListener{
