@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.datascource.realm.category.CatItemRlm
 import com.example.filter.R
 import com.example.filter.databinding.CategoryBinding
 import io.realm.OrderedRealmCollection
@@ -12,10 +13,10 @@ import io.realm.RealmRecyclerViewAdapter
 
 
 internal class CategoryRecyclerViewAdapter(
-    data: OrderedRealmCollection<com.example.datascource.realm.category.CatItemRlm?>?,
+    data: OrderedRealmCollection< CatItemRlm?>?,
     listener: (id: Int) -> Unit
 ) :
-    RealmRecyclerViewAdapter<com.example.datascource.realm.category.CatItemRlm?, RecyclerView.ViewHolder>(data, true) {
+    RealmRecyclerViewAdapter< CatItemRlm?, RecyclerView.ViewHolder>(data, true) {
     private var TAG = "REALM_RECYCLER_ADAPTER"
     var adapterListener: (id: Int) -> Unit = listener
 
@@ -48,4 +49,5 @@ internal class CategoryRecyclerViewAdapter(
         Log.i(TAG, "Created RealmRecyclerViewAdapter for ${getData()!!.size} items.")
     }
 }
+
 

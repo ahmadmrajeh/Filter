@@ -28,17 +28,22 @@
     </fragment>
     <fragment
         android:id="@+id/filterFragment"
-        android:name="com.example.filter.ui.screens.FilterFragment"
+        android:name="com.example.filter.ui.screens.filter.FilterFragment"
         android:label="fragment_filter"
         tools:layout="@layout/fragment_filter" >
         <argument
             android:name="id"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_filterFragment_to_dialogFragment"
+            app:destination="@id/dialogFragment" />
 
     </fragment>
+
+
     <fragment
-        android:id="@+id/loadFragment"
-        android:name="com.example.filter.LoadFragment"
-        android:label="fragment_load"
-        tools:layout="@layout/fragment_load" />
+        android:id="@+id/dialogFragment"
+        android:name="com.example.filter.ui.screens.filter.DialogListFragment"
+        android:label="fragment_dialog"
+        tools:layout="@layout/fragment_dialog" />
 </navigation>

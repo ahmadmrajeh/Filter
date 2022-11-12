@@ -24,7 +24,8 @@ internal class GridAdapter(data: OrderedRealmCollection<RealmOption?>?, listener
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.child_grid, parent, false)
         val binding = ChildGridBinding.bind(view)
-        return ChildHolderGrid(binding )
+        binding.textView4.text = "Any"
+        return ChildHolderGrid(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

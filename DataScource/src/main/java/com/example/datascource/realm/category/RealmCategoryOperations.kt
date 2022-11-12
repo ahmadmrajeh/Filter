@@ -24,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
         try {
 
            db .executeTransactionAwait(Dispatchers.IO){
-
                 val categories = ResultCatRealm().apply {
                   items=itemToDatabase
                 }
@@ -37,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
         } catch (e: Exception) {
         Log.e("realm insert error",e.message.toString())
         }
+
      }
 
 

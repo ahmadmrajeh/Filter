@@ -7,7 +7,6 @@ import com.example.datascource.realm.filter.FieledRealm
 import com.example.filter.ui.adapters.nestead.childs.ChildMembersAdapter
  import java.util.*
 
-
 class  ParentHolder(
     private val binding: ParentItemBinding,
     listener: (id: Int) -> Unit,
@@ -21,12 +20,13 @@ class  ParentHolder(
 
     fun bind(result: FieledRealm?) {
         selectLabelLanguage(result)
-        val childMembersAdapter = ChildMembersAdapter(result?.options, adapterListener,
+        val childMembersAdapter = ChildMembersAdapter(result?.options, adapterListener
             ,viewTypeTextOrImg,clickListenerImg)
         binding.childRecyclerview .layoutManager = LinearLayoutManager(itemView.context,
             LinearLayoutManager.HORIZONTAL,false)
         binding.childRecyclerview.adapter = childMembersAdapter
     }
+
 
     private fun selectLabelLanguage(item:FieledRealm?) {
         if (Locale.getDefault().displayLanguage == "English") {

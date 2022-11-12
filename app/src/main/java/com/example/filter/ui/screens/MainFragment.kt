@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.datascource.realm.category.CatItemRlm
 import com.example.filter.R
 import com.example.filter.databinding.FragmentMainBinding
 import com.example.filter.ui.adapters.categoryAdapter.CategoryRecyclerViewAdapter
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
     private lateinit var mAdapter: CategoryRecyclerViewAdapter
-    private var rlmRsltList: RealmList<com.example.datascource.realm.category.CatItemRlm>? = RealmList()
+    private var rlmRsltList: RealmList<CatItemRlm>? = RealmList()
     private lateinit var binding: FragmentMainBinding
 
     private val sharedViewModel: MainViewModel by activityViewModels()

@@ -19,6 +19,9 @@ class  ParentHolderGrid(private val binding: GridParentBinding, listener:   (id:
         val layoutManager = FlexboxLayoutManager(itemView.context)
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.justifyContent = JustifyContent.CENTER
+        layoutManager.flexWrap=FlexWrap.WRAP
+layoutManager.alignItems = AlignItems.CENTER
+
 
 
 

@@ -15,14 +15,12 @@ import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolderNumeric
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
-
 internal class ParentAdapter(
     data: OrderedRealmCollection<FieledRealm?>?,
-    listener: ArrayList<(id: Int) -> Unit>
-) :
+    listener: List<(id: Any) -> Unit>
+ ) :
     RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
-
-    var listOfListeners: ArrayList<(id: Int) -> Unit> = listener
+    var listOfListeners: List<(id: Any) -> Unit> = listener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -35,9 +33,11 @@ internal class ParentAdapter(
             }
 
             VIEW_TYPE_NUMERIC -> {
+
                 val view = inflater.inflate(R.layout.parent_numric, parent, false)
                 val binding = ParentNumricBinding.bind(view)
                 ParentHolderNumeric(binding, listOfListeners[1])
+
             }
 
             else -> {
@@ -73,10 +73,12 @@ internal class ParentAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val obj = getItem(position)
-        return if (obj?.data_type == "list_string_boolean") VIEW_TYPE_GRID
-        else if (obj?.data_type == "list_string_icon") VIEW_TYPE_ICON_STRING
-        else if (obj?.data_type == "list_numeric") VIEW_TYPE_NUMERIC
-        else VIEW_TYPE_LIST_STRING
+        return when (obj?.data_type) {
+            "list_string_boolean" -> VIEW_TYPE_GRID
+            "list_string_icon" -> VIEW_TYPE_ICON_STRING
+            "list_numeric" -> VIEW_TYPE_NUMERIC
+            else -> VIEW_TYPE_LIST_STRING
+        }
     }
 
     companion object {
