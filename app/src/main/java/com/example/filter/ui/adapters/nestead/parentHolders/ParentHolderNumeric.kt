@@ -2,31 +2,28 @@ package com.example.filter.ui.adapters.nestead.parentHolders
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datascource.realm.filter.FieledRealm
-import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.databinding.ParentNumricBinding
-import io.realm.RealmList
 import java.util.*
 
 
-class  ParentHolderNumeric(private val binding: ParentNumricBinding,listener:   (id: RealmList< RealmOption>) -> Unit) :
+class  ParentHolderNumeric(
+    private val binding: ParentNumricBinding,
+    listener: (params: List<Any>) -> Unit
+) :
     RecyclerView.ViewHolder(binding.root){
-    var adapterListener: (obj: RealmList< RealmOption>) -> Unit = listener
+    var adapterListener: (params: List<Any>) -> Unit = listener
 
 
 
     fun bind(result: FieledRealm?) {
         selectLabelLanguage(result)
-
-        binding.linearLayout.setOnClickListener {
-            adapterListener( result!!.options)
+        binding.From .setOnClickListener {
+            adapterListener(listOf(result!!.options,"numericFrom") )
         }
 
-
-
-        binding.linearLayout2.setOnClickListener {
-            adapterListener( result!!.options)
-
-        }
+        binding.To.setOnClickListener {
+            adapterListener(listOf(result!!.options,"numericTo") )
+         }
 
 
      /*   val childMembersAdapter = ChildMembersAdapter(result?.options, adapterListener)

@@ -7,10 +7,14 @@ import com.bumptech.glide.Glide
 import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.R
 import com.example.filter.databinding.ChildItemBinding
+import io.realm.RealmList
 
 
-class ChildHolderCircle(private val binding: ChildItemBinding,
-                        clickListenerImg: (id: Int) -> Unit) :
+class ChildHolderCircle(
+    private val binding: ChildItemBinding,
+    clickListenerImg: (params: List<Any>) -> Unit,
+    passedSelectedOptions: RealmList<RealmOption>
+) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: RealmOption?) {
@@ -18,7 +22,7 @@ class ChildHolderCircle(private val binding: ChildItemBinding,
             .load( item?.option_img)
             .placeholder(R.drawable.ic_launcher_foreground)
             .circleCrop()
-            .into(binding.imageView)
+            .into(binding.icon)
 
         binding.root.setOnClickListener {
             selectionState()

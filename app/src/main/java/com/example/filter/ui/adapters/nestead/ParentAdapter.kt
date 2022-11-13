@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datascource.realm.filter.FieledRealm
+import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.R
 import com.example.filter.databinding.GridParentBinding
 import com.example.filter.databinding.ParentItemBinding
@@ -12,16 +13,22 @@ import com.example.filter.databinding.ParentNumricBinding
 import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolder
 import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolderGrid
 import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolderNumeric
+import com.example.filter.utils.VIEW_TYPE_GRID
+import com.example.filter.utils.VIEW_TYPE_ICON_STRING
+import com.example.filter.utils.VIEW_TYPE_LIST_STRING
+import com.example.filter.utils.VIEW_TYPE_NUMERIC
 import io.realm.OrderedRealmCollection
+import io.realm.RealmList
 import io.realm.RealmRecyclerViewAdapter
 
 internal class ParentAdapter(
     data: OrderedRealmCollection<FieledRealm?>?,
-    listener: List<(id: Any) -> Unit>
- ) :
+    listener: List<(params: List<Any>) -> Unit>,
+    realmLiveOptions: RealmList<RealmOption>
+) :
     RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
-    var listOfListeners: List<(id: Any) -> Unit> = listener
-
+    var listOfListeners: List<(params: List<Any>) -> Unit> = listener
+var passedSelectedOptions =realmLiveOptions
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
@@ -29,7 +36,7 @@ internal class ParentAdapter(
             VIEW_TYPE_GRID -> {
                 val view = inflater.inflate(R.layout.grid_parent, parent, false)
                 val binding = GridParentBinding.bind(view)
-                ParentHolderGrid(binding, listOfListeners[0])
+                ParentHolderGrid(binding, listOfListeners[0],passedSelectedOptions)
             }
 
             VIEW_TYPE_NUMERIC -> {
@@ -43,7 +50,7 @@ internal class ParentAdapter(
             else -> {
                 val view = inflater.inflate(R.layout.parent_item, parent, false)
                 val binding = ParentItemBinding.bind(view)
-                ParentHolder(binding, listOfListeners[2], listOfListeners[3], viewType)
+                ParentHolder(binding, listOfListeners[2], listOfListeners[3], viewType,passedSelectedOptions)
             }
         }
     }
@@ -80,13 +87,6 @@ internal class ParentAdapter(
             "list_numeric" -> VIEW_TYPE_NUMERIC
             else -> VIEW_TYPE_LIST_STRING
         }
-    }
-
-    companion object {
-        const val VIEW_TYPE_LIST_STRING = 1
-        const val VIEW_TYPE_NUMERIC = 2
-        const val VIEW_TYPE_ICON_STRING = 3
-        const val VIEW_TYPE_GRID = 4
     }
 
 }

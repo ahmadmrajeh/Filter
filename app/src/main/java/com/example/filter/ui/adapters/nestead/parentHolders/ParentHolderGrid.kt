@@ -2,27 +2,30 @@ package com.example.filter.ui.adapters.nestead.parentHolders
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.datascource.realm.filter.FieledRealm
+import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.databinding.GridParentBinding
 import com.example.filter.ui.adapters.nestead.childs.GridAdapter
 import com.google.android.flexbox.*
+import io.realm.RealmList
 import java.util.*
 
 
-class  ParentHolderGrid(private val binding: GridParentBinding, listener:   (id: Int) -> Unit) :
-    RecyclerView.ViewHolder(binding.root){
-    var adapterListener: (id: Int) -> Unit = listener
-
+class  ParentHolderGrid(
+    private val binding: GridParentBinding,
+    listener: (params: List<Any>) -> Unit,
+    passedSelectedOptions: RealmList<RealmOption>
+) :
+    RecyclerView.ViewHolder(binding.root) {
+    var adapterListener: (params: ArrayList<Any>) -> Unit = listener
+    var realmLiveOptions =passedSelectedOptions
 
     fun bind(result: FieledRealm?) {
         selectLabelLanguage(result)
-        val childMembersAdapter = GridAdapter(result?.options, adapterListener)
+        val childMembersAdapter = GridAdapter(result?.options, adapterListener,realmLiveOptions)
         val layoutManager = FlexboxLayoutManager(itemView.context)
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.justifyContent = JustifyContent.CENTER
         layoutManager.flexWrap=FlexWrap.WRAP
-layoutManager.alignItems = AlignItems.CENTER
-
-
 
 
         binding.childRecyclerview.adapter = childMembersAdapter

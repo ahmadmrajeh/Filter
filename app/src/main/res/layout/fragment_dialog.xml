@@ -18,38 +18,38 @@
         tools:context=".ui.screens.filter.DialogListFragment">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button5"
+            android:id="@+id/From"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
+            android:tag="0"
+            android:background="@drawable/txt_outlined_bg"
             android:bottomLeftRadius="0dp"
             android:bottomRightRadius="0dp"
-            android:foreground="@drawable/blu_btn"
-            android:text="@string/button"
+            android:text="From"
             android:textColor="#37474F"
             android:topLeftRadius="0dp"
             android:topRightRadius="0dp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toStartOf="@+id/button4"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/To"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button4"
+            android:id="@+id/To"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
-            android:foreground="@drawable/blu_btn"
+            android:tag="0"
+            android:background="@drawable/txt_outlined_bg"
             android:bottomLeftRadius="0dp"
             android:bottomRightRadius="0dp"
-            android:text="@string/button"
+            android:text="To"
             android:textColor="#37474F"
             android:topLeftRadius="0dp"
             android:topRightRadius="0dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/button5"
+            app:layout_constraintStart_toEndOf="@+id/From"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <EditText
@@ -87,55 +87,56 @@
             android:id="@+id/recyclerDialig"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/done"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button4" />
+            app:layout_constraintTop_toBottomOf="@+id/To" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button"
+            android:id="@+id/done"
             android:layout_width="wrap_content"
             android:layout_height="55dp"
+
+
             android:background="@drawable/btn_outlined_bg"
+            android:text="Done"
 
-
-            android:text="Button"
-            android:textColor="#37474F"
-
+            android:visibility="visible"
             app:backgroundTint="#8BC34A"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button2" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button2"
+            android:id="@+id/reset"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/txt_outlined_bg"
             android:bottomLeftRadius="0dp"
             android:bottomRightRadius="0dp"
-            android:text="@string/button"
+            android:text="Reset"
             android:textColor="#37474F"
             android:topLeftRadius="0dp"
             android:topRightRadius="0dp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button"
-            app:layout_constraintStart_toEndOf="@+id/button3"
-            app:layout_constraintTop_toTopOf="@+id/button"
+            app:layout_constraintEnd_toStartOf="@+id/done"
+            app:layout_constraintStart_toEndOf="@+id/cancel"
+            app:layout_constraintTop_toTopOf="@+id/done"
             app:layout_constraintVertical_bias="0.0" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button3"
+            android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:background="@drawable/txt_outlined_bg"
 
-            android:text="Button"
+            android:text="Cancel"
             android:textColor="#37474F"
 
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/button"
+            app:layout_constraintTop_toTopOf="@+id/done"
             app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout></androidx.constraintlayout.widget.ConstraintLayout>

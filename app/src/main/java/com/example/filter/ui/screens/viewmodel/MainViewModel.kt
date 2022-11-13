@@ -1,13 +1,16 @@
 package com.example.filter.ui.screens.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.datascource.model.options.OptionsResponse
+import com.example.datascource.model.searchRes.SearchRes
 import com.example.datascource.realm.category.CatItemRlm
 import com.example.datascource.realm.category.ResultCatRealm
 import com.example.datascource.realm.filter.FilterSubCategory
+import com.example.datascource.realm.filter.RealmOption
 import com.example.datascource.repository.Repository
 import com.example.filter.utils.JsonMockApi
 import com.google.gson.Gson
@@ -23,9 +26,9 @@ class MainViewModel : ViewModel() {
     var repository = Repository()
     var result: MutableLiveData<ResultCatRealm> = MutableLiveData()
     var resultFilter: MutableLiveData<FilterSubCategory> = MutableLiveData()
+    var selectedOptions: MutableLiveData<RealmList<RealmOption>> = MutableLiveData()
 
-
-    private fun optionJsonToKotlin(applicationContext: Context, orderedFields: com.example.datascource.model.searchRes.SearchRes, id: Int) {
+    private fun optionJsonToKotlin(applicationContext: Context, orderedFields: SearchRes, id: Int) {
         val jsonFileString = JsonMockApi.getJsonDataFromAsset(
             applicationContext, "dynamic.json"
         )
@@ -46,8 +49,8 @@ class MainViewModel : ViewModel() {
         )
 
         val gson = Gson()
-        val type = object : TypeToken<com.example.datascource.model.searchRes.SearchRes>() {}.type
-        val passedToOptions: com.example.datascource.model.searchRes.SearchRes = gson.
+        val type = object : TypeToken<SearchRes>() {}.type
+        val passedToOptions: SearchRes = gson.
         fromJson(jsonFileString, type)
         optionJsonToKotlin(applicationContext, passedToOptions, id)
     }
@@ -68,21 +71,17 @@ class MainViewModel : ViewModel() {
 
     private fun offlineCacheCategories(modelItem: com.example.datascource.model
     .categAndSub.SooqFilterModel) {
-
-
         viewModelScope.launch(Dispatchers.IO) {
             apiDataCategory = repository.apiDataCategory(modelItem)
             val db = Realm.getDefaultInstance()
             repository.insertItemToRealm(apiDataCategory, db)
-
         }
-
     }
 
 
     private fun offlineCacheFilterFields(
         optionsAndFields:  OptionsResponse,
-        orderedFields: com.example.datascource.model.searchRes.SearchRes,
+        orderedFields: SearchRes,
         id: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
