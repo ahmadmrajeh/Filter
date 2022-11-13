@@ -9,21 +9,37 @@ import com.example.filter.ui.adapters.nestead.childs.ChildMembersAdapter
 
 class  ParentHolder(
     private val binding: ParentItemBinding,
-    listener: (id: Int) -> Unit,
-    listener2: (id: Int) -> Unit,
+    listener:(params: List<Any>) -> Unit,
+    listener2: (params: List<Any>) -> Unit,
     viewType: Int
 ) : RecyclerView.ViewHolder(binding.root){
-    var adapterListener: (id: Int) -> Unit = listener
+    var adapterListener: (params: List<Any>) -> Unit = listener
     var viewTypeTextOrImg = viewType
-    var clickListenerImg: (id: Int) -> Unit =  listener2
+    var clickListenerImg: (params: List<Any>) -> Unit =  listener2
+    var type = viewType
 
 
     fun bind(result: FieledRealm?) {
-        selectLabelLanguage(result)
-        val childMembersAdapter = ChildMembersAdapter(result?.options, adapterListener
-            ,viewTypeTextOrImg,clickListenerImg)
-        binding.childRecyclerview .layoutManager = LinearLayoutManager(itemView.context,
-            LinearLayoutManager.HORIZONTAL,false)
+        selectLabelLanguage(result )
+        circleMembersAdapter(result)
+        binding.selectedClicked.setOnClickListener {
+        if (type== 3) {
+            clickListenerImg(listOf(result!!.options,"icon") )
+        } else {
+            adapterListener(listOf(result!!.options,"string") )
+        }
+    }
+ }
+
+
+    private fun circleMembersAdapter(result: FieledRealm?) {
+        val childMembersAdapter = ChildMembersAdapter(
+            result?.options, adapterListener, viewTypeTextOrImg, clickListenerImg
+        )
+        binding.childRecyclerview.layoutManager = LinearLayoutManager(
+            itemView.context,
+            LinearLayoutManager.HORIZONTAL, false
+        )
         binding.childRecyclerview.adapter = childMembersAdapter
     }
 
@@ -35,6 +51,4 @@ class  ParentHolder(
             binding.parentItemTitle.text = item?.label_ar
         }
     }
-
-
 }

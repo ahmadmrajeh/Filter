@@ -36,20 +36,18 @@ class FilterFragment : Fragment() {
         binding = FragmentFilterBinding.inflate(inflater)
         Log.e("WORKINGS", args.id.toString())
         sharedViewModel.subFlowJsonToKotlin(
-            requireContext().applicationContext, args.id)
+            requireContext().applicationContext, args.id
+        )
         sharedViewModel.readOfflineCacheFields(args.id)
         observeData()
         return binding.root
     }
 
-   private fun observeData() {
-
+    private fun observeData() {
         sharedViewModel.resultFilter.observe(viewLifecycleOwner) {
-
             try {
-                rlmRstList= it.fieldsList
+                rlmRstList = it.fieldsList
                 setUpRecyclerView()
-
             } catch (e: Exception) {
                 Log.e("WORKINGS", "no data" + e.message)
             }
@@ -57,46 +55,41 @@ class FilterFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-
         if (rlmRstList.isNotEmpty()) {
             mAdapter = parentAdapterInstance(rlmRstList)
-
-
-
             lifecycleScope.launch(Dispatchers.Main) {
                 binding.RcyclerFilter.adapter = mAdapter
-                binding.RcyclerFilter.
-                layoutManager= LinearLayoutManager(requireContext())
-
+                binding.RcyclerFilter.layoutManager = LinearLayoutManager(requireContext())
             }
         }
     }
 
     private fun parentAdapterInstance(data: RealmList<FieledRealm>):
             ParentAdapter {
-      return  ParentAdapter(data , listOf(
+        return ParentAdapter(data, listOf(
             {
                 //grid
 
             }, { obj ->
-              // numeric
+                // numeric
+                DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
+                    childFragmentManager, DialogListFragment.TAG
+                )
 
-              DialogListFragment(obj as RealmList< RealmOption>).show(
-                  childFragmentManager, DialogListFragment.TAG
-              )
-
-
-          } ,{
+            }, { obj ->
                 //text
+                DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
+                    childFragmentManager, DialogListFragment.TAG
+                )
 
-            },{
+            }, { obj ->
                 // icon
-
+                DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
+                    childFragmentManager, DialogListFragment.TAG
+                )
             }
         )
 
         )
     }
-
-
 }

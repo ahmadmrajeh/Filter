@@ -16,60 +16,34 @@ import io.realm.RealmRecyclerViewAdapter
 
 internal class ChildMembersAdapter(
     data: OrderedRealmCollection<RealmOption?>?,
-    listener: (id: Int) -> Unit,
+    listener: (params: List<Any>) -> Unit,
     viewType: Int,
-    listener2: (id: Int) -> Unit
+    listener2: (params: List<Any>) -> Unit
 ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
 
-    var  adapterListener: (id: Int) -> Unit = listener
-    var  clickListenerImg: (id: Int) -> Unit = listener2
+    var  adapterListener: (params: List<Any>)-> Unit = listener
+    var  clickListenerImg:(params: List<Any>) -> Unit = listener2
     var  viewTypeTextOrImg= viewType
-    override fun getItemViewType(position: Int): Int {
+
+
+    override fun getItemViewType (position: Int): Int {
         val obj = getItem(position)
         return when (obj?.option_img) {
-
-            null ->  ParentAdapter.VIEW_TYPE_LIST_STRING
-
-            else -> {
-                ParentAdapter.VIEW_TYPE_ICON_STRING
-            }
+            null ->  1
+            else -> 3
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         val inflater = LayoutInflater.from(parent.context)
-
-        return when (viewTypeTextOrImg) {
-
-            3  -> {
-          val returned =  if (viewType != 3) {
-              val view = inflater.inflate(R.layout.child_item_text_circle, parent, false)
-              val binding = ChildItemTextCircleBinding.bind(view)
-              ChildHolderTextCircle(binding,adapterListener)
-                } else {
-              val view = inflater.inflate(R.layout.child_item, parent, false)
-              val binding = ChildItemBinding.bind(view)
-              ChildHolderCircle(binding,clickListenerImg)
-
-
-                }
-                returned
-            }
-
-            else -> {
-                val view = inflater.inflate(R.layout.child_item_text_circle, parent, false)
-                val binding = ChildItemTextCircleBinding.bind(view)
-                ChildHolderTextCircle(binding,adapterListener)
-            }
-        }
+        return viewHolder(viewType, inflater, parent)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val obj = getItem(position)
         Log.i("Binding", "Binding view holder: ${obj?.label}")
-
 
         when (holder) {
             is ChildHolderCircle -> {
@@ -78,15 +52,49 @@ internal class ChildMembersAdapter(
             is ChildHolderTextCircle -> {
                 holder.bind(obj)
             }
-
         }
-
-
-
     }
 
     override fun getItemId(index: Int): Long {
         return getItem(index)!!.id!!.toLong()
     }
+
+    private fun childHolderCircle(
+        inflater: LayoutInflater,
+        parent: ViewGroup
+    ): ChildHolderCircle {
+        val view = inflater.inflate(R.layout.child_item, parent, false)
+        val binding = ChildItemBinding.bind(view)
+        return ChildHolderCircle(binding, clickListenerImg)
+    }
+
+    private fun childHolderTextCircle(
+        inflater: LayoutInflater,
+        parent: ViewGroup
+    ): ChildHolderTextCircle {
+        val view = inflater.inflate(R.layout.child_item_text_circle, parent, false)
+        val binding = ChildItemTextCircleBinding.bind(view)
+        return ChildHolderTextCircle(binding, adapterListener)
+    }
+
+    private fun viewHolder(
+        viewType: Int,
+        inflater: LayoutInflater,
+        parent: ViewGroup
+    ) = when (viewTypeTextOrImg) {
+
+        3 -> {
+            val returned = if (viewType != 3) {
+                childHolderTextCircle(inflater, parent)
+            } else {
+                childHolderCircle(inflater, parent)
+            }
+            returned
+        }
+        else -> {
+            childHolderTextCircle(inflater, parent)
+        }
+    }
+
 
 }

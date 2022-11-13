@@ -11,24 +11,16 @@ import java.util.*
 
 class ChildHolderTextCircle(
     private val binding: ChildItemTextCircleBinding,
-    adapterListener: (id: Int) -> Unit
+    adapterListener: (params: List<Any>) -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
 
     fun bind(item: RealmOption?) {
-
-
-
-
         selectLabelLanguage(item)
-
         binding.root.setOnClickListener{
             selectionState()
-
         }
-
-
     }
 
     private fun selectionState() {
@@ -41,18 +33,15 @@ class ChildHolderTextCircle(
             binding.constraint.background = ContextCompat.getDrawable(
                 itemView.context, R.drawable.circle_option_bg
             )
-
             binding.ticked.visibility = View.INVISIBLE
-
-
         }
     }
 
     private fun selectLabelLanguage(item:RealmOption?) {
         if (Locale.getDefault().displayLanguage == "English") {
-            binding.textView2.text = item?.label_en
+            binding.stringCircle .text = item?.label_en
         } else {
-            binding.textView2.text = item?.label
+            binding.stringCircle.text = item?.label
         }
     }
 

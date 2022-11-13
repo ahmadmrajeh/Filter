@@ -13,23 +13,18 @@ import com.example.filter.ui.adapters.nestead.childs.viewholders.ChildHolderGrid
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
-
-
-internal class GridAdapter(data: OrderedRealmCollection<RealmOption?>?, listener:   (id: Int) -> Unit ) :
+internal class GridAdapter(data: OrderedRealmCollection<RealmOption?>?, listener:   (params: ArrayList<Any>) -> Unit ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
-
-    var adapterListener: (id: Int) -> Unit = listener
+    var adapterListener: (params: ArrayList<Any>) -> Unit = listener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.child_grid, parent, false)
         val binding = ChildGridBinding.bind(view)
-        binding.textView4.text = "Any"
         return ChildHolderGrid(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         val obj = getItem(position)
         Log.i("Binding", "Binding view holder: ${obj?.label}")
 

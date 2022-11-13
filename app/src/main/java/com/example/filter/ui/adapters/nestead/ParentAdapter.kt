@@ -12,15 +12,19 @@ import com.example.filter.databinding.ParentNumricBinding
 import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolder
 import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolderGrid
 import com.example.filter.ui.adapters.nestead.parentHolders.ParentHolderNumeric
+import com.example.filter.utils.VIEW_TYPE_GRID
+import com.example.filter.utils.VIEW_TYPE_ICON_STRING
+import com.example.filter.utils.VIEW_TYPE_LIST_STRING
+import com.example.filter.utils.VIEW_TYPE_NUMERIC
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
 internal class ParentAdapter(
     data: OrderedRealmCollection<FieledRealm?>?,
-    listener: List<(id: Any) -> Unit>
+    listener: List<  (params: List<Any>) -> Unit>
  ) :
     RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
-    var listOfListeners: List<(id: Any) -> Unit> = listener
+    var listOfListeners: List<(params: List<Any>) -> Unit> = listener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -80,13 +84,6 @@ internal class ParentAdapter(
             "list_numeric" -> VIEW_TYPE_NUMERIC
             else -> VIEW_TYPE_LIST_STRING
         }
-    }
-
-    companion object {
-        const val VIEW_TYPE_LIST_STRING = 1
-        const val VIEW_TYPE_NUMERIC = 2
-        const val VIEW_TYPE_ICON_STRING = 3
-        const val VIEW_TYPE_GRID = 4
     }
 
 }

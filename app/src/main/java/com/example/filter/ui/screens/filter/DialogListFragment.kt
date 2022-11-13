@@ -19,13 +19,11 @@ import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
-class DialogListFragment(obj: RealmList<RealmOption>) : DialogFragment() {
-   lateinit var binding : FragmentDialogBinding
+class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFragment() {
+    private val dataType = type
+    lateinit var binding: FragmentDialogBinding
     private lateinit var mAdapter: AdapterDialog
-    private var rlmRsltList: RealmList< RealmOption>? = obj
-
-
+    private var rlmRsltList: RealmList<RealmOption>? = obj
     companion object {
         const val TAG = "onDialog"
     }
@@ -34,49 +32,59 @@ class DialogListFragment(obj: RealmList<RealmOption>) : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-
     ): View {
         binding = FragmentDialogBinding.inflate(inflater)
-
-
-        controlVisibelity()
-        numericButtonsColor()
-
-
+        if (dataType == "numericFrom" || dataType == "numericTo") controlVisibility()
         setUpRecyclerView()
-
-
         return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun numericButtonsColor() {
-        binding.button5.foreground = ContextCompat
-            .getDrawable(
-                requireContext(),
-                R.drawable.blu_white
-            )
+         if (dataType == "numericFrom")fromClicked()
+        else   toClicked()
+        binding.From.setOnClickListener {
+            fromClicked()
+        }
+        binding.To.setOnClickListener {
+            toClicked()
+        }
     }
 
-    private fun controlVisibelity() {
-        binding.button4.visibility = View.VISIBLE
-
-        binding.button5.visibility = View.VISIBLE
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun toClicked() {
+        binding.To.foreground = ContextCompat
+            .getDrawable(requireContext(), R.drawable.blu_btn)
+        binding.From.foreground = ContextCompat
+            .getDrawable(requireContext(), R.drawable.blu_white)
     }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun fromClicked() {
+        binding.From.foreground = ContextCompat
+            .getDrawable(requireContext(), R.drawable.blu_btn)
+        binding.To.foreground = ContextCompat
+            .getDrawable(requireContext(), R.drawable.blu_white)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun controlVisibility() {
+        binding.From.visibility = View.VISIBLE
+        binding.To.visibility = View.VISIBLE
+        numericButtonsColor()
+    }
+
     private fun setUpRecyclerView() {
 
         if (rlmRsltList?.isNotEmpty() == true) {
-            Log.e("2tt","there is data")
-            mAdapter = AdapterDialog(rlmRsltList) { id ->
+            Log.e("2tt", "there is data")
+            mAdapter = AdapterDialog(rlmRsltList) {
 
             }
-
-            lifecycleScope.launch(Dispatchers.Main) {
-                binding.recyclerDialig .adapter = mAdapter
+                lifecycleScope.launch(Dispatchers.Main) {
+                binding.recyclerDialig.adapter = mAdapter
                 binding.recyclerDialig.layoutManager = LinearLayoutManager(requireContext())
             }
         }
     }
-
-
 }

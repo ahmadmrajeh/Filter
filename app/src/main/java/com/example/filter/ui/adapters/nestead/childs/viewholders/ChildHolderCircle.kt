@@ -10,7 +10,7 @@ import com.example.filter.databinding.ChildItemBinding
 
 
 class ChildHolderCircle(private val binding: ChildItemBinding,
-                        clickListenerImg: (id: Int) -> Unit) :
+                        clickListenerImg:(params: List<Any>) -> Unit) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: RealmOption?) {
@@ -18,7 +18,7 @@ class ChildHolderCircle(private val binding: ChildItemBinding,
             .load( item?.option_img)
             .placeholder(R.drawable.ic_launcher_foreground)
             .circleCrop()
-            .into(binding.imageView)
+            .into(binding.icon)
 
         binding.root.setOnClickListener {
             selectionState()

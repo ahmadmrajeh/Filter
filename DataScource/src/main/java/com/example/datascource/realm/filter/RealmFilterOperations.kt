@@ -77,15 +77,28 @@ class RealmFilterOperations {
     private fun changeOptionsTypeToRealm(optionsForCurrentField: List<Option>): RealmList<RealmOption> {
       val returnedList : RealmList<RealmOption> = RealmList()
       for (element in optionsForCurrentField){
+if ( element.option_img.isNullOrEmpty() ) {
+    returnedList.add(
+        RealmOption(
+            element.field_id,element.has_child,element.id,element.label,
+            element.label_en,
+            null,
+            element.order,element.parent_id,element.value
+        )
+    )
 
-              returnedList.add(
-                  RealmOption(
-                      element.field_id,element.has_child,element.id,element.label,
-                      element.label_en,
-                      "https://opensooqui2.os-cdn.com/api/apiV/android/xxh"+element.option_img,
-                      element.order,element.parent_id,element.value
-                  )
-              )
+}else {
+    returnedList.add(
+        RealmOption(
+            element.field_id,element.has_child,element.id,element.label,
+            element.label_en,
+            "https://opensooqui2.os-cdn.com/api/apiV/android/xxh"+element.option_img,
+            element.order,element.parent_id,element.value
+        )
+    )
+
+}
+
 
 
 

@@ -33,9 +33,9 @@ binding.root.setOnClickListener{
 
     private fun selectLabelLanguage(item:RealmOption?) {
         if (Locale.getDefault().displayLanguage == "English") {
-            binding.textView4.text = item?.label_en
+            binding.gridElement .text = item?.label_en
         } else {
-            binding.textView4.text = item?.label
+            binding.gridElement.text = item?.label
         }
     }
 

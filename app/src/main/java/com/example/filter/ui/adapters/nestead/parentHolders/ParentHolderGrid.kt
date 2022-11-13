@@ -8,9 +8,10 @@ import com.google.android.flexbox.*
 import java.util.*
 
 
-class  ParentHolderGrid(private val binding: GridParentBinding, listener:   (id: Int) -> Unit) :
-    RecyclerView.ViewHolder(binding.root){
-    var adapterListener: (id: Int) -> Unit = listener
+class  ParentHolderGrid(private val binding: GridParentBinding,
+                     listener:   (params: List<Any>) -> Unit) :
+    RecyclerView.ViewHolder(binding.root) {
+    var adapterListener: (params: ArrayList<Any>) -> Unit = listener
 
 
     fun bind(result: FieledRealm?) {
@@ -20,9 +21,6 @@ class  ParentHolderGrid(private val binding: GridParentBinding, listener:   (id:
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.justifyContent = JustifyContent.CENTER
         layoutManager.flexWrap=FlexWrap.WRAP
-layoutManager.alignItems = AlignItems.CENTER
-
-
 
 
         binding.childRecyclerview.adapter = childMembersAdapter
