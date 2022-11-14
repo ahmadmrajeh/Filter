@@ -13,23 +13,28 @@ class  ParentHolder(
     private val binding: ParentItemBinding,
     listener: (params: List<Any>) -> Unit,
     listener2: (params: List<Any>) -> Unit,
+    listener3: (params: List<Any>) -> Unit,
+    listener4: (params: List<Any>) -> Unit,
     viewType: Int,
     passedSelectedOptions: RealmList<RealmOption>
 ) : RecyclerView.ViewHolder(binding.root){
-    var adapterListener: (params: List<Any>) -> Unit = listener
     var viewTypeTextOrImg = viewType
+    var adapterListener: (params: List<Any>) -> Unit = listener
     var clickListenerImg: (params: List<Any>) -> Unit =  listener2
+    var adapterListenerDialog: (params: List<Any>) -> Unit = listener3
+    var clickListenerImgDialog: (params: List<Any>) -> Unit =  listener4
     var type = viewType
     var realmLiveOptions =passedSelectedOptions
 
     fun bind(result: FieledRealm?) {
+
         selectLabelLanguage(result )
         circleMembersAdapter(result)
         binding.selectedClicked.setOnClickListener {
         if (type== 3) {
-            clickListenerImg(listOf(result!!.options,"icon") )
+            clickListenerImgDialog(listOf(result!!.options,"icon") )
         } else {
-            adapterListener(listOf(result!!.options,"string") )
+            adapterListenerDialog(listOf(result!!.options,"string") )
         }
     }
  }

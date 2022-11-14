@@ -14,6 +14,7 @@ import com.example.datascource.realm.filter.FieledRealm
 import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.databinding.FragmentFilterBinding
 import com.example.filter.ui.adapters.nestead.ParentAdapter
+import com.example.filter.ui.adapters.nestead.childs.ChildMembersAdapter
 import com.example.filter.ui.screens.viewmodel.MainViewModel
 import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ class FilterFragment : Fragment() {
             requireContext().applicationContext, args.id
         )
         sharedViewModel.readOfflineCacheFields(args.id)
+        sharedViewModel.selectedOptions.value = RealmList()
         observeData()
         return binding.root
     }
@@ -49,14 +51,10 @@ class FilterFragment : Fragment() {
 
                 rlmRstList = it.fieldsList
             setUpRecyclerView()
-
-
-
-        }
-
-
-        sharedViewModel.selectedOptions.observe(viewLifecycleOwner){selected: RealmList<RealmOption> ->
+         }
+       sharedViewModel.selectedOptions.observe(viewLifecycleOwner){selected: RealmList<RealmOption> ->
             realmLiveOptions = selected
+       Log.e("LIV1212","live data is on")
         }
 
 
@@ -88,16 +86,52 @@ class FilterFragment : Fragment() {
                 )
 
             }, { obj ->
-                //text
+                if (obj[1]=="horizontal"&& obj[2] == true/* */){
+                    sharedViewModel.updateOption(obj[0] as RealmOption, true)
+                    sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption) }
+
+                else if (obj[1]=="horizontal"&& obj[2] ==false){
+
+                    sharedViewModel.updateOption(obj[0] as RealmOption, false)
+                    sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
+                }
+
+                Log.e("listvv", sharedViewModel.selectedOptions.value.toString())
+
+         /*       else
+
+                )*/
+
+            }, { obj ->
+
+                //Log.e("listvv", obj[0].toString())
+
+                if (obj[1]=="horizontal"&& obj[2] == true/* */){
+                    sharedViewModel.updateOption(obj[0] as RealmOption, true)
+                sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption) }
+
+                else if (obj[1]=="horizontal"&& obj[2] ==false){
+                    sharedViewModel.updateOption(obj[0] as RealmOption, false)
+                    sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
+                }
+
+                Log.e("listvv", sharedViewModel.selectedOptions.value.toString())
+
+              /*  else
+                */
+            } ,{  obj ->
+                // iconDialog
                 DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
                     childFragmentManager, DialogListFragment.TAG
                 )
 
-            }, { obj ->
-                // icon
+
+           }, {  obj ->
+                //stringDia
+                //textDialog
                 DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
-                    childFragmentManager, DialogListFragment.TAG
-                )
+                    childFragmentManager, DialogListFragment.TAG)
+
             }
         ) , realmLiveOptions
 

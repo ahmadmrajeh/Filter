@@ -17,6 +17,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.realm.Realm
 import io.realm.RealmList
+import io.realm.kotlin.executeTransactionAwait
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -45,8 +46,7 @@ class MainViewModel : ViewModel() {
     fun subFlowJsonToKotlin(applicationContext: Context, id: Int) {
         val jsonFileString = JsonMockApi.getJsonDataFromAsset(
             applicationContext,
-            "assign.json"
-        )
+            "assign.json")
 
         val gson = Gson()
         val type = object : TypeToken<SearchRes>() {}.type
@@ -87,6 +87,31 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val db = Realm.getDefaultInstance()
             repository.insertFieldsToRealm(optionsAndFields, orderedFields, db, id)
+
+        }
+    }
+
+      fun  updateOption(
+      option: RealmOption,
+      selected: Boolean
+    ) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val db = Realm.getDefaultInstance()
+            db.executeTransactionAwait(Dispatchers.Main) {
+                val newOption = RealmOption().apply {
+                    field_id = option.field_id
+                    has_child = option.has_child
+                    id = option.id
+                    label = option.label
+                    label_en = option.label_en
+                    option_img = option.option_img
+                    order = option.order
+                    parent_id = option.parent_id
+                    value = option.value
+                    isSelected = selected
+                }
+                it.insertOrUpdate(newOption)
+            }
 
         }
     }

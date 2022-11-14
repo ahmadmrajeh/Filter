@@ -50,7 +50,7 @@ var passedSelectedOptions =realmLiveOptions
             else -> {
                 val view = inflater.inflate(R.layout.parent_item, parent, false)
                 val binding = ParentItemBinding.bind(view)
-                ParentHolder(binding, listOfListeners[2], listOfListeners[3], viewType,passedSelectedOptions)
+                ParentHolder(binding, listOfListeners[2], listOfListeners[3],listOfListeners[4],listOfListeners[5], viewType,passedSelectedOptions)
             }
         }
     }

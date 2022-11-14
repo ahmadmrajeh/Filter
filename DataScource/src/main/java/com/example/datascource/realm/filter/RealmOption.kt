@@ -1,20 +1,21 @@
 package com.example.datascource.realm.filter
 
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
 open class RealmOption : RealmObject {
 
     var field_id: String?=""
     var has_child: String?=""
-    var id: String?=""
+    @PrimaryKey var id: String?=""
     var label: String?=""
     var label_en: String?=""
     var option_img: String?=""
     var order: String?=""
     var parent_id: String? =""
     var value: String?=""
-
-    constructor()
+    var isSelected: Boolean = false
+constructor()
     constructor(
         field_id: String?,
         has_child: String?,
@@ -24,7 +25,8 @@ open class RealmOption : RealmObject {
         option_img: String?,
         order: String?,
         parent_id: String?,
-        value: String?
+        value: String?,
+        isSelected: Boolean
     ) : super() {
         this.field_id = field_id
         this.has_child = has_child
@@ -35,7 +37,6 @@ open class RealmOption : RealmObject {
         this.order = order
         this.parent_id = parent_id
         this.value = value
+        this.isSelected = isSelected
     }
-
-
 }

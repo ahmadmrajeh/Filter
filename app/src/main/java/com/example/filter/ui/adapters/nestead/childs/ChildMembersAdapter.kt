@@ -50,16 +50,12 @@ internal class ChildMembersAdapter(
 
         when (holder) {
             is ChildHolderCircle -> {
-        if (obj?.parent_id ==null || obj in passedSelectedOptions.filter {
-            it.id == obj.parent_id
-            } )
+
                 holder.bind(obj)
 
             }
             is ChildHolderTextCircle -> {
-                if (obj?.parent_id ==null || obj in passedSelectedOptions.filter {
-                        it.id == obj.parent_id
-                    } )
+
                     holder.bind(obj)
             }
         }
