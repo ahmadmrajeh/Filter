@@ -14,28 +14,23 @@ import io.realm.RealmRecyclerViewAdapter
 
 internal class GridAdapter(
     data: OrderedRealmCollection<RealmOption?>?,
-    listener: (params: ArrayList<Any>) -> Unit,
+    listener: (params: List<Any>) -> Unit,
     realmLiveOptions: RealmList<RealmOption>
 ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
-    var adapterListener: (params: ArrayList<Any>) -> Unit = listener
-
+    var adapterListener: (params: List<Any>) -> Unit = listener
+    var selectedFromLive = realmLiveOptions
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.child_grid, parent, false)
         val binding = ChildGridBinding.bind(view)
-        return ChildHolderGrid(binding)
+        return ChildHolderGrid(binding, adapterListener, selectedFromLive)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
-        Log.i("Binding", "Binding view holder: ${obj?.label}")
+        (holder as ChildHolderGrid).bind(obj!!)
 
-
-        (holder as ChildHolderGrid).bind(obj)
-  /*      (holder as ChildHolderGrid).itemView.setOnClickListener{
-            adapterListener(position)
-        }*/
     }
 
     override fun getItemId(index: Int): Long {

@@ -13,7 +13,6 @@ class JsonMockApi {
                jsonString = context.assets.open(fileName).bufferedReader()
                    .use { it.readText()
                }
-               Log.e("jsss","try success ")
            } catch (ioException: IOException) {
                ioException.printStackTrace()
                Log.e("jsss","try Failed "+ioException.message)

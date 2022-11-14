@@ -11,12 +11,12 @@ class ApplicationClass: Application() {
         super.onCreate()
         Realm.init (this)
         val config = RealmConfiguration.Builder().schemaVersion(7).modules(
-            com.example.datascource.realm.AppModules()
+           AppModules()
         )
             .deleteRealmIfMigrationNeeded()
             .name("realm.db")
             .allowQueriesOnUiThread(true)
-            .allowWritesOnUiThread(false)
+            .allowWritesOnUiThread(true)
             .build()
 
         Realm.setDefaultConfiguration(config)

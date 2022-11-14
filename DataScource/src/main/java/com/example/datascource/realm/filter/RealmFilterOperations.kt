@@ -1,34 +1,35 @@
 package com.example.datascource.realm.filter
 
- import com.example.datascource.model.options.Field
+import com.example.datascource.model.options.Field
 import com.example.datascource.model.options.Option
 import com.example.datascource.model.options.OptionsResponse
- import com.example.datascource.model.searchRes.SearchFlow
+import com.example.datascource.model.searchRes.SearchFlow
 import com.example.datascource.model.searchRes.SearchRes
- import io.realm.Realm
+import io.realm.Realm
 import io.realm.RealmList
 import io.realm.kotlin.executeTransactionAwait
 import kotlinx.coroutines.Dispatchers
 
 class RealmFilterOperations {
 
-  suspend fun insertFieldsIntoRealm(
-      optionsAndFields: OptionsResponse,
-      orderedFields: SearchRes,
-      db: Realm,
-      id: Int
+    suspend fun insertFieldsIntoRealm(
+        optionsAndFields: OptionsResponse,
+        orderedFields: SearchRes,
+        db: Realm,
+        id: Int
     ) {
-            val fieldsRealmList: RealmList<FieledRealm> =  getApiFields(optionsAndFields , orderedFields , id )
+        val fieldsRealmList: RealmList<FieledRealm> =
+            getApiFields(optionsAndFields, orderedFields, id)
 
 
 
-      db.executeTransactionAwait(Dispatchers.IO) {
-                val filterSubCategory = FilterSubCategory().apply {
-                    idSubCategory = id
-                    fieldsList=fieldsRealmList
-                }
-                it.insertOrUpdate(filterSubCategory)
+        db.executeTransactionAwait(Dispatchers.IO) {
+            val filterSubCategory = FilterSubCategory().apply {
+                idSubCategory = id
+                fieldsList = fieldsRealmList
             }
+            it.insertOrUpdate(filterSubCategory)
+        }
     }
 
     private fun orderedFieldsToRealm(
@@ -36,12 +37,13 @@ class RealmFilterOperations {
         id: Int,
         optionsAndFields: OptionsResponse,
         fieldsRealmList: RealmList<FieledRealm>
-    )  {
+    ) {
         val tempList: SearchFlow? = orderedFields.result.data.search_flow.find {
             it.category_id == id
         }
-
+        var countAni = 0
         for (item in tempList!!.order) {
+            countAni -= 1
             val listElem = orderedFields.result.data.fields_labels.find {
                 it.field_name == item
             }
@@ -50,64 +52,68 @@ class RealmFilterOperations {
                 it.name == item
 
             }
-           val optionsForCurrentField: List<Option> = optionsAndFields.result.data.options.filter {
-               temp!!.id.toString() == it.field_id
-           }
+            val optionsForCurrentField: List<Option> = optionsAndFields.result.data.options.filter {
+                temp!!.id.toString() == it.field_id
+            }
+            val realmOptions: RealmList<RealmOption> = RealmList()
+            realmOptions.add(
 
-            val realmOptions :RealmList<RealmOption> = RealmList()
-            realmOptions.add(  RealmOption(
-              "-1","1","-1","اي",
-                "Any",
-                null,
-                "",null,null
-            ))
+                RealmOption(
+                    temp?.id.toString(), "1", countAni.toString(), "اي",
+                    "Any",
+                    null,
+                    "", null, null, false, ""
+                )
+            )
             realmOptions.addAll(changeOptionsTypeToRealm(optionsForCurrentField))
 
-            temp?.let { field->
+            temp?.let { field ->
 
-                    fieldsRealmList.add(
-                        FieledRealm(field.data_type, field.id, field.name, field.parent_id,
-                            field.parent_name,listElem!!.label_ar, listElem.label_en,realmOptions)
+                fieldsRealmList.add(
+                    FieledRealm(
+                        field.data_type, field.id, field.name, field.parent_id,
+                        field.parent_name, listElem!!.label_ar, listElem.label_en, realmOptions
                     )
+                )
 
             }
         }
     }
 
     private fun changeOptionsTypeToRealm(optionsForCurrentField: List<Option>): RealmList<RealmOption> {
-      val returnedList : RealmList<RealmOption> = RealmList()
-      for (element in optionsForCurrentField){
-if ( element.option_img.isNullOrEmpty() ) {
-    returnedList.add(
-        RealmOption(
-            element.field_id,element.has_child,element.id,element.label,
-            element.label_en,
-            null,
-            element.order,element.parent_id,element.value
-        )
-    )
+        val returnedList: RealmList<RealmOption> = RealmList()
+        for (element in optionsForCurrentField) {
+            if (element.option_img.isNullOrEmpty()) {
+                returnedList.add(
+                    RealmOption(
+                        element.field_id, element.has_child, element.id, element.label,
+                        element.label_en,
+                        null,
+                        element.order, element.parent_id, element.value, false, ""
+                    )
+                )
 
-}else {
-    returnedList.add(
-        RealmOption(
-            element.field_id,element.has_child,element.id,element.label,
-            element.label_en,
-            "https://opensooqui2.os-cdn.com/api/apiV/android/xxh"+element.option_img,
-            element.order,element.parent_id,element.value
-        )
-    )
-
-}
-
+            } else {
+                returnedList.add(
+                    RealmOption(
+                        element.field_id, element.has_child, element.id, element.label,
+                        element.label_en,
+                        "https://opensooqui2.os-cdn.com/api/apiV/android/xxh" + element.option_img,
+                        element.order, element.parent_id, element.value, false, ""
+                    )
+                )
+            }
 
 
-
-
-      }
+        }
         return returnedList
     }
 
-    fun getApiFields(optionsAndFields: OptionsResponse, orderedFields: SearchRes, id: Int): RealmList<FieledRealm> {
+    fun getApiFields(
+        optionsAndFields: OptionsResponse,
+        orderedFields: SearchRes,
+        id: Int
+    ): RealmList<FieledRealm> {
         val fieldsRealmList: RealmList<FieledRealm> = RealmList()
         orderedFieldsToRealm(orderedFields, id, optionsAndFields, fieldsRealmList)
         return fieldsRealmList

@@ -1,20 +1,15 @@
-package com.example.filter.ui.screens
+package com.example.filter.ui.screens.categories
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.datascource.realm.category.CatItemRlm
-import com.example.filter.R
 import com.example.filter.databinding.FragmentMainBinding
 import com.example.filter.ui.adapters.categoryAdapter.CategoryRecyclerViewAdapter
 import com.example.filter.ui.screens.viewmodel.MainViewModel
@@ -35,9 +30,8 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
 
     ): View {
-       requireActivity(). title="Select Category"
+        requireActivity().title = "Select Category"
         binding = FragmentMainBinding.inflate(inflater)
-        sharedViewModel.catJsonToKotlin(requireActivity().applicationContext)
         sharedViewModel.readOfflineCacheCategoriesAndSub()
         observeData()
         return binding.root
@@ -45,24 +39,18 @@ class MainFragment : Fragment() {
 
     private fun observeData() {
         sharedViewModel.result.observe(viewLifecycleOwner) {
-
-             rlmRsltList = it.items
+            rlmRsltList = it.items
             setUpRecyclerView()
-
-
-
         }
     }
 
     private fun setUpRecyclerView() {
-
         if (rlmRsltList?.isNotEmpty() == true) {
             mAdapter = CategoryRecyclerViewAdapter(rlmRsltList) { id ->
                 findNavController().navigate(
                     MainFragmentDirections.actionMainFragmentToSubCatFragment(id)
                 )
             }
-
             lifecycleScope.launch(Dispatchers.Main) {
                 binding.categoryRecycler.adapter = mAdapter
                 binding.categoryRecycler.layoutManager = LinearLayoutManager(requireContext())

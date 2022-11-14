@@ -2,7 +2,6 @@ package com.example.filter.ui.screens.filter
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,11 +21,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFragment() {
+    private lateinit var realmLiveOptions: RealmList<RealmOption>
     private val sharedViewModel: MainViewModel by activityViewModels()
-    private val dataType = type
+    private var dataType = type
     lateinit var binding: FragmentDialogBinding
     private lateinit var mAdapter: AdapterDialog
     private var rlmRsltList: RealmList<RealmOption>? = obj
+
     companion object {
         const val TAG = "onDialog"
     }
@@ -37,15 +38,33 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDialogBinding.inflate(inflater)
+
         if (dataType == "numericFrom" || dataType == "numericTo") controlVisibility()
-        setUpRecyclerView()
+        else {
+            binding.cancel.setOnClickListener {
+                dismiss()
+            }
+            binding.reset.setOnClickListener {
+                dismiss()
+            }
+            binding.done.setOnClickListener {
+                dismiss()
+            }
+        }
+
+
+        sharedViewModel.selectedOptions.observe(viewLifecycleOwner) { selected: RealmList<RealmOption> ->
+            realmLiveOptions = selected
+            setUpRecyclerView()
+        }
         return binding.root
-    }
+
+   }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun numericButtonsColor() {
-         if (dataType == "numericFrom")fromClicked()
-        else   toClicked()
+        if (dataType == "numericFrom") fromClicked()
+        else toClicked()
         binding.From.setOnClickListener {
             fromClicked()
         }
@@ -60,6 +79,7 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
             .getDrawable(requireContext(), R.drawable.blu_btn)
         binding.From.foreground = ContextCompat
             .getDrawable(requireContext(), R.drawable.blu_white)
+        dataType ="numericTo"
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -68,26 +88,70 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
             .getDrawable(requireContext(), R.drawable.blu_btn)
         binding.To.foreground = ContextCompat
             .getDrawable(requireContext(), R.drawable.blu_white)
+        dataType ="numericFrom"
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun controlVisibility() {
         binding.From.visibility = View.VISIBLE
         binding.To.visibility = View.VISIBLE
+        binding.cancel.visibility = View.GONE
+        binding.reset.visibility = View.GONE
+        binding.done.text = getString(R.string.cancel)
+        binding.done.setOnClickListener {
+            dismiss()
+        }
         numericButtonsColor()
     }
 
     private fun setUpRecyclerView() {
-
         if (rlmRsltList?.isNotEmpty() == true) {
-            Log.e("2tt", "there is data")
-            mAdapter = AdapterDialog(rlmRsltList,dataType) {
 
-            }
-                lifecycleScope.launch(Dispatchers.Main) {
+            mAdapter = AdapterDialog(rlmRsltList!!, dataType)
+            lifecycleScope.launch(Dispatchers.Main) {
                 binding.recyclerDialig.adapter = mAdapter
                 binding.recyclerDialig.layoutManager = LinearLayoutManager(requireContext())
             }
+        }
+    }
+
+    private fun AdapterDialog(data: RealmList<RealmOption>, comingFrom: String): AdapterDialog {
+        return AdapterDialog(data, comingFrom, listOf(
+            { obj -> // icon
+                handleOptionsSelected(obj)
+
+            }, { obj -> //text
+                handleOptionsSelected(obj)
+            }, {
+                    obj -> //numeric
+                handleNumericChanged(obj)
+                dismiss()
+            }
+        ),
+            realmLiveOptions)
+    }
+
+    private fun handleNumericChanged(obj: List<Any>) {
+        val option = obj[0] as RealmOption
+        val temp = sharedViewModel.selectedOptions.value?.find {
+            it.field_id == option.field_id && it.whereFrom == obj[1]
+
+        }
+        temp?.let {
+            sharedViewModel.selectedOptions.value?.remove(it)
+            sharedViewModel.updateOption(option, false, obj[1] as String)
+        }
+        sharedViewModel.updateOption(option, true, obj[1] as String)
+        sharedViewModel.selectedOptions.value?.add(option)
+    }
+
+    private fun handleOptionsSelected(obj: List<Any>) {
+        if (obj[1] == "horizontal" && obj[2] == true/*insert */) {
+            sharedViewModel.updateOption(obj[0] as RealmOption, true, "")
+            sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
+        } else if (obj[1] == "horizontal" && obj[2] == false) {
+            sharedViewModel.updateOption(obj[0] as RealmOption, false, "")
+            sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
         }
     }
 }

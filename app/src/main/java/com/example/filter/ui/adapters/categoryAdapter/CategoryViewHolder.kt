@@ -16,12 +16,12 @@ class CategoryViewHolder(private val binding: CategoryBinding) :
         selectLabelLanguage(item)
 
         Glide.with(itemView)
-            .load( item.icon)
+            .load(item.icon)
             .into(binding.categoryIcon)
     }
 
 
-    private fun selectLabelLanguage(item:CatItemRlm) {
+    private fun selectLabelLanguage(item: CatItemRlm) {
         if (Locale.getDefault().displayLanguage == "English") {
             binding.categoryText.text = item.label_en
         } else {

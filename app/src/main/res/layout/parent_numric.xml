@@ -64,7 +64,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/value"
+                android:id="@+id/valueFrom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -110,7 +110,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/valueTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"

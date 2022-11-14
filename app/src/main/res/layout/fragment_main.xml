@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screens.MainFragment" >
+    tools:context=".ui.screens.categories.MainFragment" >
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/inputSearch"
         android:layout_width="match_parent"
@@ -17,28 +17,23 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
-        <EditText
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/ic_baseline_search_24"
 
-            android:layout_marginStart="5dp"
-
-            android:layout_marginEnd="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/search"
-            android:hint="Search...."
-            android:inputType="textCapCharacters"
-            android:minHeight="48dp"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:queryHint="Search" />
     </com.google.android.material.card.MaterialCardView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoryRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginTop="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

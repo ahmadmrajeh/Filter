@@ -1,5 +1,6 @@
 package com.example.filter.ui.adapters.nestead
 
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -28,41 +29,47 @@ internal class ParentAdapter(
 ) :
     RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
     var listOfListeners: List<(params: List<Any>) -> Unit> = listener
-var passedSelectedOptions =realmLiveOptions
+    var passedSelectedOptions = realmLiveOptions
+    private val scrollStates: MutableMap<String, Parcelable?> = mutableMapOf()
+
+    private fun getSectionID(position: Int): String {
+        return getItem(position)!!.id.toString()
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+
+        if (holder is NestedRecyclerViewViewHolder) {
+            val key = getSectionID(holder.layoutPosition)
+            scrollStates[key] = holder.getLayoutManager()?.onSaveInstanceState()
+        }
+
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-
-            VIEW_TYPE_GRID -> {
-                val view = inflater.inflate(R.layout.grid_parent, parent, false)
-                val binding = GridParentBinding.bind(view)
-                ParentHolderGrid(binding, listOfListeners[0],passedSelectedOptions)
-            }
-
-            VIEW_TYPE_NUMERIC -> {
-
-                val view = inflater.inflate(R.layout.parent_numric, parent, false)
-                val binding = ParentNumricBinding.bind(view)
-                ParentHolderNumeric(binding, listOfListeners[1])
-
-            }
-
-            else -> {
-                val view = inflater.inflate(R.layout.parent_item, parent, false)
-                val binding = ParentItemBinding.bind(view)
-                ParentHolder(binding, listOfListeners[2], listOfListeners[3], viewType,passedSelectedOptions)
-            }
-        }
+        return viewHolderChooser(viewType, inflater, parent)
     }
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
-        Log.i("TAG", "Binding view holder: ${obj?.name}")
+
+
+        val key = getSectionID(holder.layoutPosition)
+        val state = scrollStates[key]
 
         when (holder) {
             is ParentHolder -> {
-                holder.bind(obj)
+
+                if (state != null) {
+
+                    holder.getLayoutManager()?.onRestoreInstanceState(state)
+                } else {
+                    holder.getLayoutManager()?.scrollToPosition(0)
+                }
+                holder.bind(obj!!)
+
             }
             is ParentHolderNumeric -> {
                 holder.bind(obj)
@@ -83,10 +90,47 @@ var passedSelectedOptions =realmLiveOptions
         return when (obj?.data_type) {
 
             "list_string_boolean" -> VIEW_TYPE_GRID
-            "list_string_icon" ->  VIEW_TYPE_ICON_STRING
+            "list_string_icon" -> VIEW_TYPE_ICON_STRING
             "list_numeric" -> VIEW_TYPE_NUMERIC
             else -> VIEW_TYPE_LIST_STRING
         }
     }
 
+
+    private fun viewHolderChooser(
+        viewType: Int,
+        inflater: LayoutInflater,
+        parent: ViewGroup
+    ) = when (viewType) {
+        VIEW_TYPE_GRID -> {
+            val view = inflater.inflate(R.layout.grid_parent, parent, false)
+            val binding = GridParentBinding.bind(view)
+            ParentHolderGrid(binding, listOfListeners[0], passedSelectedOptions)
+        }
+
+        VIEW_TYPE_NUMERIC -> {
+            val view = inflater.inflate(R.layout.parent_numric, parent, false)
+            val binding = ParentNumricBinding.bind(view)
+            ParentHolderNumeric(binding, listOfListeners[1], passedSelectedOptions)
+        }
+
+        else -> {
+            val view = inflater.inflate(R.layout.parent_item, parent, false)
+            val binding = ParentItemBinding.bind(view)
+            ParentHolder(
+                binding,
+                listOfListeners[2],
+                listOfListeners[3],
+                listOfListeners[4],
+                listOfListeners[5],
+                viewType,
+                passedSelectedOptions
+            )
+        }
+    }
+}
+
+interface NestedRecyclerViewViewHolder {
+
+    fun getLayoutManager(): RecyclerView.LayoutManager?
 }

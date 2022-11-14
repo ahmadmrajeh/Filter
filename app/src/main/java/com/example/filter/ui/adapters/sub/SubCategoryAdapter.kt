@@ -30,23 +30,17 @@ internal class SubCategoryAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
-        Log.i(TAG, "Binding view holder: ${obj?.name}")
-
         if (obj != null) {
             (holder as SubViewHolder).bind(obj)
         }
 
         (holder as SubViewHolder).itemView.setOnClickListener {
-          adapterListener(obj!!.id)
+            adapterListener(obj!!.id)
         }
     }
 
     override fun getItemId(index: Int): Long {
         return getItem(index)!!.id.toLong()
-    }
-
-    init {
-        Log.i(TAG, "Created RealmRecyclerViewAdapter for ${getData()!!.size} items.")
     }
 }
 

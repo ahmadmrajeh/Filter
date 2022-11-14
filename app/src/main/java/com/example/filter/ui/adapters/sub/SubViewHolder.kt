@@ -13,24 +13,16 @@ class SubViewHolder(private val binding: SubCategoryBinding) :
 
     fun bind(item: SubCatRealm) {
 
-
         selectLabelLanguage(item)
-
-
         Glide.with(itemView)
             .load( item.icon)
             .into(binding.categoryIcon)
-
-
-
-
     }
 
     private fun selectLabelLanguage(item: SubCatRealm) {
         if (Locale.getDefault().displayLanguage == "English") {
             binding.categoryText.text = item.label_en
         } else {
-
             binding.categoryText.text = item.name
         }
     }

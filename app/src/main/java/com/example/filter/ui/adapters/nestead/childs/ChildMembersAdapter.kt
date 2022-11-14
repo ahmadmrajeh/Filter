@@ -2,9 +2,9 @@ package com.example.filter.ui.adapters.nestead.childs
 
 import android.util.Log
 import android.view.LayoutInflater
- import android.view.ViewGroup
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
- import com.example.datascource.realm.filter.RealmOption
+import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.R
 import com.example.filter.databinding.ChildItemBinding
 import com.example.filter.databinding.ChildItemTextCircleBinding
@@ -24,16 +24,16 @@ internal class ChildMembersAdapter(
     realmLiveOptions: RealmList<RealmOption>
 ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
-    var passedSelectedOptions =realmLiveOptions
-    var  adapterListener: (params: List<Any>)-> Unit = listener
-    var  clickListenerImg:(params: List<Any>) -> Unit = listener2
-    var  viewTypeTextOrImg= viewType
+    var passedSelectedOptions = realmLiveOptions
+    var adapterListener: (params: List<Any>) -> Unit = listener
+    var clickListenerImg: (params: List<Any>) -> Unit = listener2
+    var viewTypeTextOrImg = viewType
 
 
-    override fun getItemViewType (position: Int): Int {
+    override fun getItemViewType(position: Int): Int {
         val obj = getItem(position)
         return when (obj?.option_img) {
-            null ->  VIEW_TYPE_LIST_STRING
+            null -> VIEW_TYPE_LIST_STRING
             else -> VIEW_TYPE_ICON_STRING
         }
     }
@@ -50,17 +50,13 @@ internal class ChildMembersAdapter(
 
         when (holder) {
             is ChildHolderCircle -> {
-        if (obj?.parent_id ==null || obj in passedSelectedOptions.filter {
-            it.id == obj.parent_id
-            } )
-                holder.bind(obj)
+
+                holder.bind(obj!!)
 
             }
             is ChildHolderTextCircle -> {
-                if (obj?.parent_id ==null || obj in passedSelectedOptions.filter {
-                        it.id == obj.parent_id
-                    } )
-                    holder.bind(obj)
+
+                holder.bind(obj!!)
             }
         }
     }
@@ -75,7 +71,10 @@ internal class ChildMembersAdapter(
     ): ChildHolderCircle {
         val view = inflater.inflate(R.layout.child_item, parent, false)
         val binding = ChildItemBinding.bind(view)
-        return ChildHolderCircle(binding, clickListenerImg,passedSelectedOptions)
+        return ChildHolderCircle(
+            binding,
+            clickListenerImg, passedSelectedOptions
+        )
     }
 
     private fun childHolderTextCircle(
@@ -84,7 +83,10 @@ internal class ChildMembersAdapter(
     ): ChildHolderTextCircle {
         val view = inflater.inflate(R.layout.child_item_text_circle, parent, false)
         val binding = ChildItemTextCircleBinding.bind(view)
-        return ChildHolderTextCircle(binding, adapterListener,passedSelectedOptions)
+        return ChildHolderTextCircle(
+            binding,
+            adapterListener, passedSelectedOptions
+        )
     }
 
     private fun viewHolder(
@@ -101,6 +103,7 @@ internal class ChildMembersAdapter(
             }
             returned
         }
+
         else -> {
             childHolderTextCircle(inflater, parent)
         }

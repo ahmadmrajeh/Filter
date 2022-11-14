@@ -1,7 +1,6 @@
 package com.example.filter.ui.screens.filter
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +21,7 @@ import kotlinx.coroutines.launch
 
 @Suppress("UNCHECKED_CAST")
 class FilterFragment : Fragment() {
+
     private   var realmLiveOptions: RealmList<RealmOption> = RealmList()
     private val sharedViewModel: MainViewModel by activityViewModels()
     private lateinit var binding: FragmentFilterBinding
@@ -35,11 +35,13 @@ class FilterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFilterBinding.inflate(inflater)
-        Log.e("WORKINGS", args.id.toString())
+
         sharedViewModel.subFlowJsonToKotlin(
             requireContext().applicationContext, args.id
         )
         sharedViewModel.readOfflineCacheFields(args.id)
+        sharedViewModel.selectedOptions.value = RealmList()
+
         observeData()
         return binding.root
     }
@@ -49,20 +51,15 @@ class FilterFragment : Fragment() {
 
                 rlmRstList = it.fieldsList
             setUpRecyclerView()
-
-
-
-        }
-
-
-        sharedViewModel.selectedOptions.observe(viewLifecycleOwner){selected: RealmList<RealmOption> ->
+         }
+       sharedViewModel.selectedOptions.observe(viewLifecycleOwner){selected: RealmList<RealmOption> ->
             realmLiveOptions = selected
         }
 
 
     }
 
-    private fun setUpRecyclerView() {
+    private fun setUpRecyclerView()    {
         if (rlmRstList.isNotEmpty()) {
             mAdapter = parentAdapterInstance(rlmRstList,realmLiveOptions)
             lifecycleScope.launch(Dispatchers.Main) {
@@ -78,29 +75,47 @@ class FilterFragment : Fragment() {
     ):
             ParentAdapter {
         return ParentAdapter(data, listOf(
-            {
+            { obj ->
                 //grid
+                handleOptionPressed(obj)
 
             }, { obj ->
                 // numeric
-                DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
-                    childFragmentManager, DialogListFragment.TAG
-                )
+                showDialog(obj)
 
             }, { obj ->
-                //text
-                DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
-                    childFragmentManager, DialogListFragment.TAG
-                )
+                handleOptionPressed(obj)
 
             }, { obj ->
-                // icon
-                DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
-                    childFragmentManager, DialogListFragment.TAG
-                )
+                handleOptionPressed(obj)
+            } ,{  obj ->
+                // iconDialog
+                showDialog(obj)
+
+
+           }, {  obj ->
+                //textDialog
+                showDialog(obj)
+
             }
         ) , realmLiveOptions
 
         )
+    }
+
+    private fun showDialog(obj: List<Any>) {
+        DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
+            childFragmentManager, DialogListFragment.TAG
+        )
+    }
+
+    private fun handleOptionPressed(obj: List<Any>) {
+        if (obj[1] == "horizontal" && obj[2] == true/* insert*/) {
+            sharedViewModel.updateOption(obj[0] as RealmOption, true, "")
+            sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
+        } else if (obj[1] == "horizontal" && obj[2] == false) {
+            sharedViewModel.updateOption(obj[0] as RealmOption, false, "")
+            sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
+        }
     }
 }

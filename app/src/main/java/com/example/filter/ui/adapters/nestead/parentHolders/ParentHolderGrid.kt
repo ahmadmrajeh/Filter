@@ -16,7 +16,7 @@ class  ParentHolderGrid(
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
-    var adapterListener: (params: ArrayList<Any>) -> Unit = listener
+    var adapterListener: (params: List<Any>) -> Unit = listener
     var realmLiveOptions =passedSelectedOptions
 
     fun bind(result: FieledRealm?) {
@@ -30,8 +30,9 @@ class  ParentHolderGrid(
 
         binding.childRecyclerview.adapter = childMembersAdapter
         binding.childRecyclerview .layoutManager =  layoutManager
-
     }
+
+
     private fun selectLabelLanguage(item:FieledRealm?) {
         if (Locale.getDefault().displayLanguage == "English") {
             binding.parentItemTitle.text = item?.label_en

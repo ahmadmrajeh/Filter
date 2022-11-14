@@ -9,14 +9,15 @@ import com.example.datascource.realm.category.CatItemRlm
 import com.example.filter.R
 import com.example.filter.databinding.CategoryBinding
 import io.realm.OrderedRealmCollection
+import io.realm.RealmList
 import io.realm.RealmRecyclerViewAdapter
 
 
 internal class CategoryRecyclerViewAdapter(
-    data: OrderedRealmCollection< CatItemRlm?>?,
+    data: OrderedRealmCollection<CatItemRlm?>?,
     listener: (id: Int) -> Unit
 ) :
-    RealmRecyclerViewAdapter< CatItemRlm?, RecyclerView.ViewHolder>(data, true) {
+    RealmRecyclerViewAdapter<CatItemRlm?, RecyclerView.ViewHolder>(data, true) {
     private var TAG = "REALM_RECYCLER_ADAPTER"
     var adapterListener: (id: Int) -> Unit = listener
 
@@ -30,7 +31,7 @@ internal class CategoryRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
-        Log.i(TAG, "Binding view holder: ${obj?.name}")
+
 
         if (obj != null) {
             (holder as CategoryViewHolder).bind(obj)
@@ -43,10 +44,6 @@ internal class CategoryRecyclerViewAdapter(
 
     override fun getItemId(index: Int): Long {
         return getItem(index)!!.id.toLong()
-    }
-
-    init {
-        Log.i(TAG, "Created RealmRecyclerViewAdapter for ${getData()!!.size} items.")
     }
 }
 

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.filter.ui.screens.MainFragment"
+        android:name="com.example.filter.ui.screens.categories.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/subCatFragment"
-        android:name="com.example.filter.ui.screens.SubCatFragment"
+        android:name="com.example.filter.ui.screens.categories.SubCatFragment"
         android:label="fragment_sub_cat"
         tools:layout="@layout/fragment_sub_cat" >
         <argument
@@ -46,4 +46,15 @@
         android:name="com.example.filter.ui.screens.filter.DialogListFragment"
         android:label="fragment_dialog"
         tools:layout="@layout/fragment_dialog" />
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.example.filter.ui.screens.SplashScreenFragment"
+        android:label="fragment_splash_screen"
+        tools:layout="@layout/fragment_splash_screen" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+
+
 </navigation>

@@ -1,5 +1,6 @@
 package com.example.filter.ui.adapters.nestead.childs.viewholders
 
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -16,32 +17,56 @@ class ChildHolderTextCircle(
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
+    var listener = adapterListener
+    var selected = passedSelectedOptions
 
-
-    fun bind(item: RealmOption?) {
+    fun bind(item: RealmOption) {
         selectLabelLanguage(item)
-        binding.root.setOnClickListener{
-            selectionState()
-        }
-    }
 
-    private fun selectionState() {
-        if (binding.ticked.visibility == View.INVISIBLE) {
-            binding.constraint.background = ContextCompat.getDrawable(
-                itemView.context, R.drawable.circle_selected_option_bg
-            )
-            binding.ticked.visibility = View.VISIBLE
+
+        if (item in selected.filter {
+                item.parent_id == it?.id
+            } || item.parent_id == null) {
+            binding.root.visibility = View.VISIBLE
+            if (item.isSelected) inSelectedItems()
+            else notInSelectedItems()
+            binding.root.setOnClickListener {
+                handleClick(item)
+            }
         } else {
-            binding.constraint.background = ContextCompat.getDrawable(
-                itemView.context, R.drawable.circle_option_bg
-            )
-            binding.ticked.visibility = View.INVISIBLE
+            binding.root.visibility = View.GONE
         }
     }
 
-    private fun selectLabelLanguage(item:RealmOption?) {
+    private fun handleClick(item: RealmOption?) {
+        if (item!!.isSelected
+        ) {
+            notInSelectedItems()
+            listener(listOf(item, "horizontal", false))
+        } else {
+            inSelectedItems()
+            listener(listOf(item, "horizontal", true))
+        }
+    }
+
+
+    private fun notInSelectedItems() {
+        binding.constraint.background = ContextCompat.getDrawable(
+            itemView.context, R.drawable.circle_option_bg
+        )
+        binding.ticked.visibility = View.INVISIBLE
+    }
+
+    private fun inSelectedItems() {
+        binding.constraint.background = ContextCompat.getDrawable(
+            itemView.context, R.drawable.circle_selected_option_bg
+        )
+        binding.ticked.visibility = View.VISIBLE
+    }
+
+    private fun selectLabelLanguage(item: RealmOption?) {
         if (Locale.getDefault().displayLanguage == "English") {
-            binding.stringCircle .text = item?.label_en
+            binding.stringCircle.text = item?.label_en
         } else {
             binding.stringCircle.text = item?.label
         }
