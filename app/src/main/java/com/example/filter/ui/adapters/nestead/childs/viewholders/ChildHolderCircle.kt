@@ -1,6 +1,5 @@
 package com.example.filter.ui.adapters.nestead.childs.viewholders
 
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +12,7 @@ import io.realm.RealmList
 
 class ChildHolderCircle(
     private val binding: ChildItemBinding,
-    clickListenerImg: (params: List<Any>) -> Unit,
+    clickListenerImg: (params: List<Any>) -> Any,
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -28,28 +27,21 @@ class ChildHolderCircle(
             .circleCrop()
             .into(binding.icon)
 
-
-        if (item.parent_id == null || item in selected.filter {
-                it.id.toString() == item.parent_id
-            }) {
             if (item.isSelected) inSelectedItems()
             else notInSelectedItems()
-            binding.root.visibility = View.VISIBLE
+
             binding.root.setOnClickListener {
                 handleClick(item)
             }
-        } else {
-            binding.root.visibility = View.GONE
-        }
     }
 
     private fun handleClick(item: RealmOption?) {
         if (item!!.isSelected) {
             notInSelectedItems()
-            listener(listOf(item, "horizontal", false))
+            listener(listOf(item, false))
         } else {
             inSelectedItems()
-            listener(listOf(item, "horizontal", true))
+            listener(listOf(item, true))
         }
     }
 

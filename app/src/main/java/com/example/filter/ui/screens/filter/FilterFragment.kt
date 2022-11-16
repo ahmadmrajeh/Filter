@@ -35,28 +35,24 @@ class FilterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFilterBinding.inflate(inflater)
-
+        requireActivity().title = "Filter"
         sharedViewModel.subFlowJsonToKotlin(
             requireContext().applicationContext, args.id
         )
         sharedViewModel.readOfflineCacheFields(args.id)
         sharedViewModel.selectedOptions.value = RealmList()
-
         observeData()
         return binding.root
     }
 
     private fun observeData() {
         sharedViewModel.resultFilter.observe(viewLifecycleOwner) {
-
-                rlmRstList = it.fieldsList
+            rlmRstList = it.fieldsList
             setUpRecyclerView()
          }
        sharedViewModel.selectedOptions.observe(viewLifecycleOwner){selected: RealmList<RealmOption> ->
             realmLiveOptions = selected
         }
-
-
     }
 
     private fun setUpRecyclerView()    {
@@ -92,14 +88,17 @@ class FilterFragment : Fragment() {
                 // iconDialog
                 showDialog(obj)
 
-
            }, {  obj ->
                 //textDialog
                 showDialog(obj)
 
-            }
-        ) , realmLiveOptions
+             } , {
+                 //update circle data
 
+
+
+            }
+           ) , realmLiveOptions
         )
     }
 
@@ -110,12 +109,16 @@ class FilterFragment : Fragment() {
     }
 
     private fun handleOptionPressed(obj: List<Any>) {
-        if (obj[1] == "horizontal" && obj[2] == true/* insert*/) {
+        if ( obj[1] == true/* insert*/) {
             sharedViewModel.updateOption(obj[0] as RealmOption, true, "")
             sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
-        } else if (obj[1] == "horizontal" && obj[2] == false) {
+
+        } else if ( obj[1] == false) {
             sharedViewModel.updateOption(obj[0] as RealmOption, false, "")
             sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
         }
     }
+
+
+
 }

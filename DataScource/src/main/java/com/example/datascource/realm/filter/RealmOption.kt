@@ -16,6 +16,7 @@ open class RealmOption : RealmObject {
     var value: String?=""
     var isSelected: Boolean = false
     var whereFrom :String?=""
+    var parentIsSelected: Boolean= false
 constructor()
     constructor(
         field_id: String?,
@@ -28,7 +29,8 @@ constructor()
         parent_id: String?,
         value: String?,
         isSelected: Boolean,
-        whereFrom: String?
+        whereFrom: String?,
+        parentIsSelected: Boolean
     ) : super() {
         this.field_id = field_id
         this.has_child = has_child
@@ -41,6 +43,8 @@ constructor()
         this.value = value
         this.isSelected = isSelected
         this.whereFrom = whereFrom
+        this.parentIsSelected = parentIsSelected
     }
+
 
 }

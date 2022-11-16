@@ -12,11 +12,11 @@ import java.util.*
 
 class  ParentHolderGrid(
     private val binding: GridParentBinding,
-    listener: (params: List<Any>) -> Unit,
+    listener: (params: List<Any>) -> Any,
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
-    var adapterListener: (params: List<Any>) -> Unit = listener
+    var adapterListener: (params: List<Any>) -> Any = listener
     var realmLiveOptions =passedSelectedOptions
 
     fun bind(result: FieledRealm?) {

@@ -16,7 +16,7 @@
 
 
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/parent_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view2">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/valueFrom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/view3">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/valueTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

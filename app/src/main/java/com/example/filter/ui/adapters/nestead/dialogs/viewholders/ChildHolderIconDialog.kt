@@ -54,10 +54,10 @@ class ChildHolderIconDialog(
     private fun handleClick(item: RealmOption?) {
         if (item!!.isSelected) {
             binding.checkBox.isChecked = false
-            listener(listOf(item, "horizontal" ,false))
+            listener(listOf(item, false))
         } else {
             binding.checkBox.isChecked = true
-            listener(listOf(item,"horizontal" ,true))
+            listener(listOf(item,true))
         }
     }
     private fun selectLabelLanguage(item:RealmOption?) {

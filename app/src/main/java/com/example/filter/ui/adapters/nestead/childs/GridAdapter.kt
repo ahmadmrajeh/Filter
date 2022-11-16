@@ -14,11 +14,11 @@ import io.realm.RealmRecyclerViewAdapter
 
 internal class GridAdapter(
     data: OrderedRealmCollection<RealmOption?>?,
-    listener: (params: List<Any>) -> Unit,
+    listener: (params: List<Any>) -> Any,
     realmLiveOptions: RealmList<RealmOption>
 ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
-    var adapterListener: (params: List<Any>) -> Unit = listener
+    var adapterListener: (params: List<Any>) -> Any = listener
     var selectedFromLive = realmLiveOptions
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

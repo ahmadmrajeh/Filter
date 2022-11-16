@@ -146,10 +146,10 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
     }
 
     private fun handleOptionsSelected(obj: List<Any>) {
-        if (obj[1] == "horizontal" && obj[2] == true/*insert */) {
+        if ( obj[1] == true/*insert */) {
             sharedViewModel.updateOption(obj[0] as RealmOption, true, "")
             sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
-        } else if (obj[1] == "horizontal" && obj[2] == false) {
+        } else if (obj[1] == false) {
             sharedViewModel.updateOption(obj[0] as RealmOption, false, "")
             sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
         }

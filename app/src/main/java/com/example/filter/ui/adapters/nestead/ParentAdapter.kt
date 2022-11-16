@@ -1,7 +1,6 @@
 package com.example.filter.ui.adapters.nestead
 
 import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -24,11 +23,11 @@ import io.realm.RealmRecyclerViewAdapter
 
 internal class ParentAdapter(
     data: OrderedRealmCollection<FieledRealm?>?,
-    listener: List<(params: List<Any>) -> Unit>,
+    listener: List<(params: List<Any>) -> Any>,
     realmLiveOptions: RealmList<RealmOption>
 ) :
     RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
-    var listOfListeners: List<(params: List<Any>) -> Unit> = listener
+    var listOfListeners: List<(params: List<Any>) -> Any> = listener
     var passedSelectedOptions = realmLiveOptions
     private val scrollStates: MutableMap<String, Parcelable?> = mutableMapOf()
 
@@ -123,6 +122,7 @@ internal class ParentAdapter(
                 listOfListeners[3],
                 listOfListeners[4],
                 listOfListeners[5],
+                listOfListeners[6],
                 viewType,
                 passedSelectedOptions
             )
@@ -131,6 +131,5 @@ internal class ParentAdapter(
 }
 
 interface NestedRecyclerViewViewHolder {
-
     fun getLayoutManager(): RecyclerView.LayoutManager?
 }

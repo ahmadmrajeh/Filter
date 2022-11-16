@@ -18,15 +18,15 @@ import io.realm.RealmRecyclerViewAdapter
 
 internal class ChildMembersAdapter(
     data: OrderedRealmCollection<RealmOption?>?,
-    listener: (params: List<Any>) -> Unit,
+    listener: (params: List<Any>) -> Any,
     viewType: Int,
-    listener2: (params: List<Any>) -> Unit,
+    listener2: (params: List<Any>) -> Any,
     realmLiveOptions: RealmList<RealmOption>
 ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
     var passedSelectedOptions = realmLiveOptions
-    var adapterListener: (params: List<Any>) -> Unit = listener
-    var clickListenerImg: (params: List<Any>) -> Unit = listener2
+    var adapterListener: (params: List<Any>) -> Any = listener
+    var clickListenerImg: (params: List<Any>) -> Any = listener2
     var viewTypeTextOrImg = viewType
 
 

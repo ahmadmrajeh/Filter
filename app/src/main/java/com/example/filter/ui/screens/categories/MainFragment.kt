@@ -17,7 +17,6 @@ import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class MainFragment : Fragment() {
     private lateinit var mAdapter: CategoryRecyclerViewAdapter
     private var rlmRsltList: RealmList<CatItemRlm>? = RealmList()
@@ -57,5 +56,4 @@ class MainFragment : Fragment() {
             }
         }
     }
-
 }

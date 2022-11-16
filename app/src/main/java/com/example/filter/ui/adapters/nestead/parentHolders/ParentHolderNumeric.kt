@@ -9,11 +9,11 @@ import java.util.*
 
 class ParentHolderNumeric(
     private val binding: ParentNumricBinding,
-    listener: (params: List<Any>) -> Unit,
+    listener: (params: List<Any>) -> Any,
     optionSelector: RealmList<RealmOption>
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    var adapterListener: (params: List<Any>) -> Unit = listener
+    var adapterListener: (params: List<Any>) -> Any = listener
     var passedSelectedOptions = optionSelector
 
     fun bind(result: FieledRealm?) {

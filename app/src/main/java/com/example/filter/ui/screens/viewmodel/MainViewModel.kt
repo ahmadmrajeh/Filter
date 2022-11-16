@@ -1,9 +1,11 @@
 package com.example.filter.ui.screens.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.datascource.model.options.Data
 import com.example.datascource.model.options.OptionsResponse
 import com.example.datascource.model.searchRes.SearchRes
 import com.example.datascource.realm.category.CatItemRlm
@@ -112,16 +114,52 @@ class MainViewModel : ViewModel() {
                     value = option.value
                     isSelected = selected
                     whereFrom = fromWhere
+                    parentIsSelected = false
                 }
                 it.insertOrUpdate(newOption)
             }
-
-
-
-
         }
+          updateChildOptions(option , selected)
     }
 
+    private fun  updateChildOptions(
+        option: RealmOption,
+        selectedParent: Boolean,
+    ) {
+
+        viewModelScope.launch(Dispatchers.Main) {
+            val db = Realm.getDefaultInstance()
+            db.executeTransactionAwait(Dispatchers.Main) {
+                val data = db.where(RealmOption::class.java)?.equalTo("parent_id", option.id)?.findAll()
+                if (data != null) {
+
+
+
+
+                    Log.e("datarelee",data.asJSON().toString())
+                    for (item in data) {
+                        val newOption = RealmOption().apply {
+                            field_id = item.field_id
+                            has_child = item.has_child
+                            id = item.id
+                            label = item.label
+                            label_en = item.label_en
+                            option_img = item.option_img
+                            order = item.order
+                            parent_id = item.parent_id
+                            value = item.value
+                            isSelected = item.isSelected
+                            whereFrom = item.whereFrom
+                            parentIsSelected = selectedParent
+                        }
+                        it.insertOrUpdate(newOption)
+
+                    }
+                }
+
+            }
+        }
+    }
 
     fun readOfflineCacheCategoriesAndSub() {
         viewModelScope.launch(Dispatchers.Main) {
@@ -137,6 +175,7 @@ class MainViewModel : ViewModel() {
     }
 
 
+
     fun readOfflineCacheFields(id: Int) {
         viewModelScope.launch(Dispatchers.Main) {
             val db: Realm = Realm.getDefaultInstance()
@@ -147,4 +186,8 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+
+
+
 }

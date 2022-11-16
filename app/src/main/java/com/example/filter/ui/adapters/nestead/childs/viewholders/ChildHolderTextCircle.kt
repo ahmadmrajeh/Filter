@@ -13,7 +13,7 @@ import java.util.*
 
 class ChildHolderTextCircle(
     private val binding: ChildItemTextCircleBinding,
-    adapterListener: (params: List<Any>) -> Unit,
+    adapterListener: (params: List<Any>) -> Any,
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -24,17 +24,19 @@ class ChildHolderTextCircle(
         selectLabelLanguage(item)
 
 
+
+
+
+
         if (item in selected.filter {
                 item.parent_id == it?.id
-            } || item.parent_id == null) {
+            }  ) {
             binding.root.visibility = View.VISIBLE
             if (item.isSelected) inSelectedItems()
             else notInSelectedItems()
             binding.root.setOnClickListener {
                 handleClick(item)
             }
-        } else {
-            binding.root.visibility = View.GONE
         }
     }
 
@@ -42,10 +44,10 @@ class ChildHolderTextCircle(
         if (item!!.isSelected
         ) {
             notInSelectedItems()
-            listener(listOf(item, "horizontal", false))
+            listener(listOf(item, false))
         } else {
             inSelectedItems()
-            listener(listOf(item, "horizontal", true))
+            listener(listOf(item,true))
         }
     }
 
