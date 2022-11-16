@@ -94,7 +94,7 @@ class FilterFragment : Fragment() {
 
              } , {
                  //update circle data
-                sharedViewModel.updateOptionsList(it[0] as FieledRealm)
+            sharedViewModel.updateOptionsList(it[0] as FieledRealm)
             }
            ) , realmLiveOptions
         )

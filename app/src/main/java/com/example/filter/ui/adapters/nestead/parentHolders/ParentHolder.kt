@@ -31,7 +31,7 @@ class ParentHolder(
 
     fun bind(item: FieledRealm) {
 
-        filteredRealmField(listOf(item))
+         filteredRealmField(listOf(item))
 
 
 

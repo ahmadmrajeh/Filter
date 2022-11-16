@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.datascource.model.options.Data
 import com.example.datascource.model.options.OptionsResponse
 import com.example.datascource.model.searchRes.SearchRes
 import com.example.datascource.realm.category.CatItemRlm
@@ -25,13 +24,15 @@ import kotlinx.coroutines.launch
 
 
 class MainViewModel : ViewModel() {
+
+    var copyOfDaFieldsData: MutableLiveData<FilterSubCategory> = MutableLiveData()
     private lateinit var apiDataCategory: RealmList<CatItemRlm>
     var repository = Repository()
     var result: MutableLiveData<ResultCatRealm> = MutableLiveData()
     var resultFilter: MutableLiveData<FilterSubCategory> = MutableLiveData()
     var selectedOptions: MutableLiveData<RealmList<RealmOption>> = MutableLiveData()
-
-
+    val fieldOriginalData = HashMap<String, RealmList<RealmOption>>()
+      val childsWithSelectedParent :RealmList<RealmOption> = RealmList()
     private fun optionJsonToKotlin(applicationContext: Context, orderedFields: SearchRes, id: Int) {
         val jsonFileString = JsonMockApi.getJsonDataFromAsset(
             applicationContext, "dynamic.json"
@@ -104,6 +105,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             val db = Realm.getDefaultInstance()
             db.executeTransactionAwait(Dispatchers.Main) {
+
                 val newOption = RealmOption().apply {
                     field_id = option.field_id
                     has_child = option.has_child
@@ -132,10 +134,14 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             val db = Realm.getDefaultInstance()
             db.executeTransactionAwait(Dispatchers.Main) {
-                val data =
-                    db.where(RealmOption::class.java)?.equalTo("parent_id", option.id)?.findAll()
+                val data = db.where(RealmOption::class.java)?.equalTo("parent_id", option.id)?.findAll()
+                //this option is the parent of the elements in data
+
+
                 if (data != null) {
                     for (item in data) {
+                        if (selectedParent) childsWithSelectedParent.add(item)
+                        else childsWithSelectedParent.remove(item)
                         val newOption = RealmOption().apply {
                             field_id = item.field_id
                             has_child = item.has_child
@@ -150,11 +156,14 @@ class MainViewModel : ViewModel() {
                             whereFrom = item.whereFrom
                             parentIsSelected = selectedParent
                         }
+
                         it.insertOrUpdate(newOption)
                     }
                 }
-
             }
+
+
+
         }
     }
 
@@ -164,21 +173,16 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             val db = Realm.getDefaultInstance()
             db.executeTransactionAwait(Dispatchers.Main) { realm ->
+            if (fieldOriginalData[option.id.toString()].isNullOrEmpty())
+                fieldOriginalData[option.id.toString()] = option.options
+
 
                 val tempList  :RealmList<RealmOption> = RealmList()
+                    for (item in fieldOriginalData[option.id.toString()]!!){
 
-                val data = db.where(RealmOption::class.java)?.equalTo("parentIsSelected",true)?.
-                equalTo("field_id" , option.id.toString())?.
-                findAll()
-             Log.e("dsssss", data.toString())
-
-                    for (item in option.options){
-                        if (data != null) {
-                            if (  item in data || item.parent_id == null)
+                            if (  item in childsWithSelectedParent || item.parent_id == null)
                                 tempList.add(item)
-                        }
                     }
-
 
                     val newOption = FieledRealm().apply {
                         data_type = option.data_type
@@ -214,9 +218,13 @@ fun readOfflineCacheFields(id: Int) {
         val db: Realm = Realm.getDefaultInstance()
         val data = db.where(FilterSubCategory::class.java)
             .equalTo("idSubCategory", id)?.findFirst()
-        data?.let {
-            resultFilter.postValue(it)
+        data?.let {param->
+            resultFilter.postValue(param)
+            copyOfDaFieldsData.postValue(param)
+
         }
     }
   }
 }
+
+
