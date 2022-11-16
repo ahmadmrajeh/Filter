@@ -161,22 +161,24 @@ class MainViewModel : ViewModel() {
    fun updateOptionsList(
         option: FieledRealm
     ) {
-
         viewModelScope.launch(Dispatchers.Main) {
             val db = Realm.getDefaultInstance()
             db.executeTransactionAwait(Dispatchers.Main) { realm ->
 
                 val tempList  :RealmList<RealmOption> = RealmList()
 
-                val data = db.where(RealmOption::class.java)?.equalTo("isSelected",true)?.findAll()
+                val data = db.where(RealmOption::class.java)?.equalTo("parentIsSelected",true)?.
+                equalTo("field_id" , option.id.toString())?.
+                findAll()
+             Log.e("dsssss", data.toString())
 
-                   if (data != null) {
                     for (item in option.options){
-                   if (  item in data.filter {
-                           item.parent_id == it.id })
-                            tempList.add(item)
+                        if (data != null) {
+                            if (  item in data || item.parent_id == null)
+                                tempList.add(item)
+                        }
                     }
-                }
+
 
                     val newOption = FieledRealm().apply {
                         data_type = option.data_type
@@ -189,8 +191,7 @@ class MainViewModel : ViewModel() {
                         options = tempList
                     }
                     realm.insertOrUpdate(newOption)
-
-          }
+            }
 
         }
     }
@@ -204,11 +205,9 @@ fun readOfflineCacheCategoriesAndSub() {
 
         data?.let {
             result.postValue(it)
-
         }
     }
 }
-
 
 fun readOfflineCacheFields(id: Int) {
     viewModelScope.launch(Dispatchers.Main) {
@@ -219,9 +218,5 @@ fun readOfflineCacheFields(id: Int) {
             resultFilter.postValue(it)
         }
     }
-}
-
-
-
-
+  }
 }

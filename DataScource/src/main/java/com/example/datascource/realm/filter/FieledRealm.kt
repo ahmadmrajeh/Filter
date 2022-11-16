@@ -2,9 +2,11 @@ package com.example.datascource.realm.filter
 
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
 open class FieledRealm : RealmObject {
     var data_type: String?=""
+    @PrimaryKey
     var id: Int?=0
     var name: String?=""
     var parent_id: Int?=0
