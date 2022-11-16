@@ -50,12 +50,9 @@ internal class ChildMembersAdapter(
 
         when (holder) {
             is ChildHolderCircle -> {
-
                 holder.bind(obj!!)
-
             }
             is ChildHolderTextCircle -> {
-
                 holder.bind(obj!!)
             }
         }

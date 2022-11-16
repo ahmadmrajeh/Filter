@@ -29,21 +29,6 @@ internal class ParentAdapter(
     RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
     var listOfListeners: List<(params: List<Any>) -> Any> = listener
     var passedSelectedOptions = realmLiveOptions
-    private val scrollStates: MutableMap<String, Parcelable?> = mutableMapOf()
-
-    private fun getSectionID(position: Int): String {
-        return getItem(position)!!.id.toString()
-    }
-
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        super.onViewRecycled(holder)
-
-        if (holder is NestedRecyclerViewViewHolder) {
-            val key = getSectionID(holder.layoutPosition)
-            scrollStates[key] = holder.getLayoutManager()?.onSaveInstanceState()
-        }
-
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -54,19 +39,10 @@ internal class ParentAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
 
-
-        val key = getSectionID(holder.layoutPosition)
-        val state = scrollStates[key]
-
         when (holder) {
             is ParentHolder -> {
 
-                if (state != null) {
 
-                    holder.getLayoutManager()?.onRestoreInstanceState(state)
-                } else {
-                    holder.getLayoutManager()?.scrollToPosition(0)
-                }
                 holder.bind(obj!!)
 
             }
@@ -130,6 +106,3 @@ internal class ParentAdapter(
     }
 }
 
-interface NestedRecyclerViewViewHolder {
-    fun getLayoutManager(): RecyclerView.LayoutManager?
-}

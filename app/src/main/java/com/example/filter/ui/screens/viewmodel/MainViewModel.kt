@@ -10,6 +10,7 @@ import com.example.datascource.model.options.OptionsResponse
 import com.example.datascource.model.searchRes.SearchRes
 import com.example.datascource.realm.category.CatItemRlm
 import com.example.datascource.realm.category.ResultCatRealm
+import com.example.datascource.realm.filter.FieledRealm
 import com.example.datascource.realm.filter.FilterSubCategory
 import com.example.datascource.realm.filter.RealmOption
 import com.example.datascource.repository.Repository
@@ -31,7 +32,6 @@ class MainViewModel : ViewModel() {
     var selectedOptions: MutableLiveData<RealmList<RealmOption>> = MutableLiveData()
 
 
-
     private fun optionJsonToKotlin(applicationContext: Context, orderedFields: SearchRes, id: Int) {
         val jsonFileString = JsonMockApi.getJsonDataFromAsset(
             applicationContext, "dynamic.json"
@@ -49,12 +49,12 @@ class MainViewModel : ViewModel() {
     fun subFlowJsonToKotlin(applicationContext: Context, id: Int) {
         val jsonFileString = JsonMockApi.getJsonDataFromAsset(
             applicationContext,
-            "assign.json")
+            "assign.json"
+        )
 
         val gson = Gson()
         val type = object : TypeToken<SearchRes>() {}.type
-        val passedToOptions: SearchRes = gson.
-        fromJson(jsonFileString, type)
+        val passedToOptions: SearchRes = gson.fromJson(jsonFileString, type)
         optionJsonToKotlin(applicationContext, passedToOptions, id)
     }
 
@@ -72,8 +72,10 @@ class MainViewModel : ViewModel() {
     }
 
 
-    private fun offlineCacheCategories(modelItem: com.example.datascource.model
-    .categAndSub.SooqFilterModel) {
+    private fun offlineCacheCategories(
+        modelItem: com.example.datascource.model
+        .categAndSub.SooqFilterModel
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             apiDataCategory = repository.apiDataCategory(modelItem)
             val db = Realm.getDefaultInstance()
@@ -83,7 +85,7 @@ class MainViewModel : ViewModel() {
 
 
     private fun offlineCacheFilterFields(
-        optionsAndFields:  OptionsResponse,
+        optionsAndFields: OptionsResponse,
         orderedFields: SearchRes,
         id: Int
     ) {
@@ -94,11 +96,11 @@ class MainViewModel : ViewModel() {
         }
     }
 
-      fun  updateOption(
-          option: RealmOption,
-          selected: Boolean,
-          fromWhere: String?
-      ) {
+    fun updateOption(
+        option: RealmOption,
+        selected: Boolean,
+        fromWhere: String?
+    ) {
         viewModelScope.launch(Dispatchers.Main) {
             val db = Realm.getDefaultInstance()
             db.executeTransactionAwait(Dispatchers.Main) {
@@ -119,10 +121,10 @@ class MainViewModel : ViewModel() {
                 it.insertOrUpdate(newOption)
             }
         }
-          updateChildOptions(option , selected)
+        updateChildOptions(option, selected)
     }
 
-    private fun  updateChildOptions(
+    private fun updateChildOptions(
         option: RealmOption,
         selectedParent: Boolean,
     ) {
@@ -130,13 +132,9 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             val db = Realm.getDefaultInstance()
             db.executeTransactionAwait(Dispatchers.Main) {
-                val data = db.where(RealmOption::class.java)?.equalTo("parent_id", option.id)?.findAll()
+                val data =
+                    db.where(RealmOption::class.java)?.equalTo("parent_id", option.id)?.findAll()
                 if (data != null) {
-
-
-
-
-                    Log.e("datarelee",data.asJSON().toString())
                     for (item in data) {
                         val newOption = RealmOption().apply {
                             field_id = item.field_id
@@ -153,7 +151,6 @@ class MainViewModel : ViewModel() {
                             parentIsSelected = selectedParent
                         }
                         it.insertOrUpdate(newOption)
-
                     }
                 }
 
@@ -161,31 +158,68 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun readOfflineCacheCategoriesAndSub() {
+   fun updateOptionsList(
+        option: FieledRealm
+    ) {
+
         viewModelScope.launch(Dispatchers.Main) {
+            val db = Realm.getDefaultInstance()
+            db.executeTransactionAwait(Dispatchers.Main) { realm ->
 
-            val db: Realm = Realm.getDefaultInstance()
-            val data = db.where(ResultCatRealm::class.java)?.findFirst()
+                val tempList  :RealmList<RealmOption> = RealmList()
 
-            data?.let {
-                result.postValue(it)
+                val data = db.where(RealmOption::class.java)?.equalTo("isSelected",true)?.findAll()
 
-            }
+                   if (data != null) {
+                    for (item in option.options){
+                   if (  item in data.filter {
+                           item.parent_id == it.id })
+                            tempList.add(item)
+                    }
+                }
+
+                    val newOption = FieledRealm().apply {
+                        data_type = option.data_type
+                        id = option.id
+                        name = option.name
+                        parent_id = option.parent_id
+                        parent_name = option.parent_name
+                        label_ar = option.label_ar
+                        label_en = option.label_en
+                        options = tempList
+                    }
+                    realm.insertOrUpdate(newOption)
+
+          }
+
         }
     }
 
 
+fun readOfflineCacheCategoriesAndSub() {
+    viewModelScope.launch(Dispatchers.Main) {
 
-    fun readOfflineCacheFields(id: Int) {
-        viewModelScope.launch(Dispatchers.Main) {
-            val db: Realm = Realm.getDefaultInstance()
-            val data = db.where(FilterSubCategory::class.java)
-                    .equalTo("idSubCategory", id)?.findFirst()
-            data?.let {
-                resultFilter.postValue(it)
-            }
+        val db: Realm = Realm.getDefaultInstance()
+        val data = db.where(ResultCatRealm::class.java)?.findFirst()
+
+        data?.let {
+            result.postValue(it)
+
         }
     }
+}
+
+
+fun readOfflineCacheFields(id: Int) {
+    viewModelScope.launch(Dispatchers.Main) {
+        val db: Realm = Realm.getDefaultInstance()
+        val data = db.where(FilterSubCategory::class.java)
+            .equalTo("idSubCategory", id)?.findFirst()
+        data?.let {
+            resultFilter.postValue(it)
+        }
+    }
+}
 
 
 

@@ -24,12 +24,6 @@ class ChildHolderTextDialog(
 
         selectLabelLanguage(item)
 
-        binding.checkBox.setOnClickListener {
-
-        }
-        if (item?.parent_id == null || item in selected.filter {
-                it.id.toString() == item.parent_id
-            }) {
 
             binding.checkBox.isChecked = item!!.isSelected
 
@@ -37,9 +31,7 @@ class ChildHolderTextDialog(
             binding.checkBox.setOnClickListener {
                 handleClick(item)
             }
-        } else {
-            binding.root.visibility = View.GONE
-        }
+
     }
 
     private fun handleClick(item: RealmOption?) {
@@ -53,7 +45,6 @@ class ChildHolderTextDialog(
     }
 
     private fun selectLabelLanguage(item:RealmOption?) {
-
         if (Locale.getDefault().displayLanguage == "English") {
            binding.text.text = item?.label_en
         } else {

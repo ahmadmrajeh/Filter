@@ -23,9 +23,7 @@ class ChildHolderIconDialog(
 
     fun bind(item: RealmOption?) {
 
-   binding.root.setOnClickListener{
 
-    }
                 Glide.with(itemView)
             .load( item?.option_img)
             .placeholder(R.drawable.ic_any_check_24)
@@ -33,22 +31,12 @@ class ChildHolderIconDialog(
             .into(binding.iconImg)
         selectLabelLanguage(item)
 
-        binding.checkBox.setOnClickListener {
-
-        }
-        if (item?.parent_id == null || item in selected.filter {
-                it.id.toString() == item.parent_id
-            }) {
-
             binding.checkBox.isChecked = item!!.isSelected
 
-            binding.root.visibility = View.VISIBLE
             binding.checkBox.setOnClickListener {
                 handleClick(item)
             }
-        } else {
-            binding.root.visibility = View.GONE
-        }
+
     }
 
     private fun handleClick(item: RealmOption?) {

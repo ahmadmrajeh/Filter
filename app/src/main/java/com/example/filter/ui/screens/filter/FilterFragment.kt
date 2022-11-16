@@ -94,9 +94,7 @@ class FilterFragment : Fragment() {
 
              } , {
                  //update circle data
-
-
-
+                sharedViewModel.updateOptionsList(it[0] as FieledRealm)
             }
            ) , realmLiveOptions
         )
@@ -111,11 +109,11 @@ class FilterFragment : Fragment() {
     private fun handleOptionPressed(obj: List<Any>) {
         if ( obj[1] == true/* insert*/) {
             sharedViewModel.updateOption(obj[0] as RealmOption, true, "")
-            sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
+             sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
 
         } else if ( obj[1] == false) {
             sharedViewModel.updateOption(obj[0] as RealmOption, false, "")
-            sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
+             sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
         }
     }
 

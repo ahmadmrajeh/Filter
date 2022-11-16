@@ -23,21 +23,13 @@ class ChildHolderTextCircle(
     fun bind(item: RealmOption) {
         selectLabelLanguage(item)
 
-
-
-
-
-
-        if (item in selected.filter {
-                item.parent_id == it?.id
-            }  ) {
             binding.root.visibility = View.VISIBLE
             if (item.isSelected) inSelectedItems()
             else notInSelectedItems()
             binding.root.setOnClickListener {
                 handleClick(item)
             }
-        }
+
     }
 
     private fun handleClick(item: RealmOption?) {
