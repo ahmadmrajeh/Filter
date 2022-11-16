@@ -33,7 +33,7 @@ class ParentHolder(
 
         filteredRealmField(listOf(item))
 
-        Log.e("liworkin2",item .toString())
+
 
         selectLabelLanguage(item)
         circleMembersAdapter(item.options)
