@@ -17,11 +17,13 @@ class  ParentHolderGrid(
 ) :
     RecyclerView.ViewHolder(binding.root) {
     var adapterListener: (params: List<Any>) -> Any = listener
-    var realmLiveOptions =passedSelectedOptions
+    var realmLiveOptions = passedSelectedOptions
 
-    fun bind(result: FieledRealm?) {
+    fun bind(result: FieledRealm) {
         selectLabelLanguage(result)
-        val childMembersAdapter = GridAdapter(result?.options, adapterListener,realmLiveOptions)
+        val childMembersAdapter = GridAdapter(result?.options, {
+                            adapterListener(listOf(it[0], it[1] , result ))
+        },realmLiveOptions)
         val layoutManager = FlexboxLayoutManager(itemView.context)
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.justifyContent = JustifyContent.CENTER

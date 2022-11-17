@@ -72,7 +72,7 @@ class RealmFilterOperations {
                 fieldsRealmList.add(
                     FieledRealm(
                         field.data_type, field.id, field.name, field.parent_id,
-                        field.parent_name, listElem!!.label_ar, listElem.label_en, realmOptions
+                        field.parent_name, listElem!!.label_ar, listElem.label_en, realmOptions, false
                     )
                 )
 

@@ -50,7 +50,7 @@ internal class ParentAdapter(
                 holder.bind(obj)
             }
             is ParentHolderGrid -> {
-                holder.bind(obj)
+                holder.bind(obj!!)
             }
         }
     }

@@ -14,6 +14,7 @@ open class FieledRealm : RealmObject {
     var label_ar: String?=""
     var label_en: String?=""
     lateinit var options :RealmList<RealmOption>
+    var isStored :Boolean = false
     constructor()
     constructor(
         data_type: String?,
@@ -23,7 +24,8 @@ open class FieledRealm : RealmObject {
         parent_name: String?,
         label_ar: String?,
         label_en: String?,
-        options: RealmList<RealmOption>
+        options: RealmList<RealmOption>,
+        isStored: Boolean
     ) : super() {
         this.data_type = data_type
         this.id = id
@@ -33,6 +35,7 @@ open class FieledRealm : RealmObject {
         this.label_ar = label_ar
         this.label_en = label_en
         this.options = options
+        this.isStored = isStored
     }
 
 

@@ -29,15 +29,7 @@ class Repository {
 
 
     }
-    suspend fun getApiFields (
-        optionsAndFields: OptionsResponse,
-        orderedFields: SearchRes,
-        db: Realm,
-        id: Int
-    ): RealmList<FieledRealm> {
-        val realmFilterOperations = RealmFilterOperations()
-      return  realmFilterOperations.getApiFields(optionsAndFields,orderedFields,id)
-    }
+
 
  fun apiDataCategory (atItem: SooqFilterModel ): RealmList<CatItemRlm> {
     val realmCategoryOperations = RealmCategoryOperations()

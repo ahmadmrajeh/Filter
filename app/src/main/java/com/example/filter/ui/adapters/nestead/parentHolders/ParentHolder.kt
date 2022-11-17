@@ -31,12 +31,12 @@ class ParentHolder(
 
     fun bind(item: FieledRealm) {
 
-         filteredRealmField(listOf(item))
+
 
 
 
         selectLabelLanguage(item)
-        circleMembersAdapter(item.options)
+        circleMembersAdapter(item)
         binding.selectedClicked.setOnClickListener {
             if (type == 3) {
                 clickListenerImgDialog(listOf(item.options, "icon"))
@@ -63,9 +63,15 @@ class ParentHolder(
     }
 
 
-    private fun circleMembersAdapter(result: RealmList<RealmOption>) {
+    private fun circleMembersAdapter(result:FieledRealm ) {
         val childMembersAdapter = ChildMembersAdapter(
-            result, adapterListener, viewTypeTextOrImg, clickListenerImg, realmLiveOptions
+            result.options, {
+                adapterListener(listOf(it[0], it[1] , result ))
+                            }
+
+            , viewTypeTextOrImg, {
+                clickListenerImg(listOf(it[0], it[1] , result ))
+            }, realmLiveOptions
         )
         binding.childRecyclerview.layoutManager = LinearLayoutManager(
             itemView.context,
