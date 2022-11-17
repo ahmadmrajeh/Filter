@@ -108,14 +108,14 @@ class FilterFragment : Fragment() {
 
     private fun handleOptionPressed(obj: List<Any>) {
         if ( obj[1] == true/* insert*/) {
-            sharedViewModel.updateOption(obj[0] as RealmOption, true, "")
+            sharedViewModel.updateOption(obj[0] as RealmOption, true, "",obj[2] as FieledRealm)
              sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
-            sharedViewModel.updateOptionsList(obj[2] as FieledRealm)
+
 
         } else if ( obj[1] == false) {
-            sharedViewModel.updateOption(obj[0] as RealmOption, false, "")
+            sharedViewModel.updateOption(obj[0] as RealmOption, false, "", obj[2] as FieledRealm)
              sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
-            sharedViewModel.updateOptionsList(obj[2] as FieledRealm)
+
         }
     }
 }

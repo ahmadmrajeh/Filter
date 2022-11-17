@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmList
+import io.realm.kotlin.executeTransactionAwait
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -115,13 +116,14 @@ class MainViewModel : ViewModel() {
     fun updateOption(
         option: RealmOption,
         selected: Boolean,
-        fromWhere: String?
+        fromWhere: String?,
+        fieledRealm: FieledRealm
     ) {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            var realmWrite = Realm.getDefaultInstance()
+        viewModelScope.launch(Dispatchers.Main) {
+            val realmWrite = Realm.getDefaultInstance()
 
-            realmWrite.executeTransaction {
+            realmWrite.executeTransactionAwait(Dispatchers.Main) {
 
                 val newOption = RealmOption().apply {
                     field_id = option.field_id
@@ -137,24 +139,32 @@ class MainViewModel : ViewModel() {
                     whereFrom = fromWhere
                     parentIsSelected = false
                 }
+                try {
+                    it.insertOrUpdate(newOption)
+                }catch (e: java.lang.Exception){
+                    Log.e("opsss" , e.message.toString())
+                }
 
-                it.insertOrUpdate(newOption)
+
+
             }
+            updateChildOptions(option, selected,fieledRealm)
         }
-        updateChildOptions(option, selected)
+
 
     }
 
     private fun updateChildOptions(
         option: RealmOption,
         selectedParent: Boolean,
+        filedRealm: FieledRealm,
     ) {
 
+val modifiedFields: ArrayList<String> = ArrayList()
 
-
-        viewModelScope.launch(Dispatchers.IO) {
-            var realmWrite = Realm.getDefaultInstance()
-            realmWrite.executeTransaction {
+        viewModelScope.launch(Dispatchers.Main) {
+            val realmWrite = Realm.getDefaultInstance()
+            realmWrite.executeTransactionAwait(Dispatchers.Main) {
 
                 val data = realmWrite.where(RealmOption::class.java)?.equalTo("parent_id", option.id)?.findAll()
                 //this option is the parent of the elements in data
@@ -162,6 +172,7 @@ class MainViewModel : ViewModel() {
                     for (item in data) {
                         if (selectedParent) childrenWithSelectedParent.add(item)
                         else childrenWithSelectedParent.remove(item)
+                        item.field_id?.let { it1 -> modifiedFields.add(it1) }
                         val newOption = RealmOption().apply {
                             field_id = item.field_id
                             has_child = item.has_child
@@ -177,36 +188,70 @@ class MainViewModel : ViewModel() {
                             parentIsSelected = selectedParent
                         }
 
-                        it.insertOrUpdate(newOption)
 
+                        try {
+                            it.insertOrUpdate(newOption)
+                        }catch (e: java.lang.Exception){
+                            Log.e("opsss" , e.message.toString())
+                        }
                     }
+
                     Log.e(
-                        "numerictraces",
+                        "numerictracesSSSSS",
                         childrenWithSelectedParent.toString()
                     )
-                    timesClicked += 1
                 }
+
             }
+            updateOptionsList(childrenWithSelectedParent,modifiedFields)
         }
 
     }
 
-    fun updateOptionsList(
-        field: FieledRealm
-    ) {
-        if (timesClicked > timesExecuted)  {
+    private fun updateOptionsList(
+        childrenWithSelectedParent: RealmList<RealmOption>,
+        modifiedFields: ArrayList<String>
+    ){
 
-        viewModelScope.launch(Dispatchers.IO) {
+
+        viewModelScope.launch(Dispatchers.Main) {
             val realmWrite = Realm.getDefaultInstance()
-            val offlineField = realmWrite.copyFromRealm(field)
-            realmWrite.executeTransaction { realm ->
+
+            realmWrite.executeTransactionAwait(Dispatchers.Main) { realm ->
+
+                val tempList: RealmList<RealmOption> = RealmList()
+
+                    for (item in HashSet(modifiedFields )) {
+
+                        val data = realmWrite.where(FieledRealm::class.java)?.equalTo("id", item.toInt())?.findFirst()
+                        data?.let { modifyField(it) }
+
+                    }
+            }
+
+
+        }
+
+
+    }
+
+
+
+
+
+   private fun modifyField(
+        offlineField: FieledRealm
+    ) {
+
+
+        viewModelScope.launch(Dispatchers.Main) {
+            val realmWrite = Realm.getDefaultInstance()
+
+            realmWrite.executeTransactionAwait(Dispatchers.Main) { realm ->
 
                 if (fieldOriginalData[offlineField.id.toString()]?.name.isNullOrEmpty()) {
-                    fieldOriginalData[offlineField.id.toString()] = offlineField
-                    /*Log.e(
-                        "numerictrace",
-                        offlineField.id.toString() + "  " + fieldOriginalData[offlineField.id.toString()]?.options.toString()
-                    )*/
+                    fieldOriginalData[offlineField.id.toString()] =  realmWrite.copyFromRealm(offlineField)
+
                 }
 
                 val tempList: RealmList<RealmOption> = RealmList()
@@ -214,27 +259,20 @@ class MainViewModel : ViewModel() {
 
                 fieldOriginalData[offlineField.id.toString()]?.let {
                     for (item in it.options) {
-
-                        if (! childrenWithSelectedParent.isEmpty()){
-                            Log.e(
-                                "numerictraces",
-                                childrenWithSelectedParent.toString()
-                            )
                         val existed = childrenWithSelectedParent.find { i ->
                             item.id == i.id
                         }
-                        if (!existed?.id.isNullOrEmpty())
+                        if (!existed?.id.isNullOrEmpty()|| item.parent_id == null)
                             tempList.add(item)
-                    }
 
-                        if (  item.parent_id == null)
-                            tempList.add(item)
+
+
 
                     }
                 }
 
 
-                if (tempList != offlineField.options) {
+
                     val newOption = FieledRealm().apply {
                         data_type = offlineField.data_type
                         id = offlineField.id
@@ -244,18 +282,22 @@ class MainViewModel : ViewModel() {
                         label_ar = offlineField.label_ar
                         label_en = offlineField.label_en
                         options = tempList
-                        isStored = offlineField.isStored
+
                     }
-                    realm.insertOrUpdate(newOption)
-                }
+                    try {
+                        realm.insertOrUpdate(newOption)
+                    }catch (e: java.lang.Exception){
+                        Log.e("opsss" , e.message.toString())
+                    }
+
+
+
             }
-            timesExecuted += 1
+
 
         }
 
 
-        timesExecuted += 1
-    }
     }
 
 

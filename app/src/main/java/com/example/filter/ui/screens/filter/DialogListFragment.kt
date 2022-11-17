@@ -11,6 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.datascource.realm.filter.FieledRealm
 import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.R
 import com.example.filter.databinding.FragmentDialogBinding
@@ -139,18 +140,18 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
         }
         temp?.let {
             sharedViewModel.selectedOptions.value?.remove(it)
-            sharedViewModel.updateOption(option, false, obj[1] as String)
+            sharedViewModel.updateOption(option, false, obj[1] as String, obj[2] as FieledRealm)
         }
-        sharedViewModel.updateOption(option, true, obj[1] as String)
+        sharedViewModel.updateOption(option, true, obj[1] as String, obj[2] as FieledRealm)
         sharedViewModel.selectedOptions.value?.add(option)
     }
 
     private fun handleOptionsSelected(obj: List<Any>) {
         if ( obj[1] == true/*insert */) {
-            sharedViewModel.updateOption(obj[0] as RealmOption, true, "")
+            sharedViewModel.updateOption(obj[0] as RealmOption, true, "", obj[2] as FieledRealm)
             sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
         } else if (obj[1] == false) {
-            sharedViewModel.updateOption(obj[0] as RealmOption, false, "")
+            sharedViewModel.updateOption(obj[0] as RealmOption, false, "", obj[2] as FieledRealm)
             sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
         }
     }
