@@ -171,18 +171,22 @@ class MainViewModel : ViewModel() {
         option: FieledRealm
     ) {
         viewModelScope.launch(Dispatchers.Main) {
-            val db = Realm.getDefaultInstance()
-            db.executeTransactionAwait(Dispatchers.Main) { realm ->
-            if (fieldOriginalData[option.id.toString()].isNullOrEmpty())
-                fieldOriginalData[option.id.toString()] = option.options
+            if (!selectedOptions.value.isNullOrEmpty() ) {
+                val db = Realm.getDefaultInstance()
+                db.executeTransactionAwait(Dispatchers.Main) { realm ->
 
-
-                val tempList  :RealmList<RealmOption> = RealmList()
-                    for (item in fieldOriginalData[option.id.toString()]!!){
-
-                            if (  item in childsWithSelectedParent || item.parent_id == null)
-                                tempList.add(item)
+                    if (fieldOriginalData[option.id.toString()].isNullOrEmpty()) {
+                        fieldOriginalData[option.id.toString()] = option.options
                     }
+
+
+                    val tempList: RealmList<RealmOption> = RealmList()
+                    for (item in fieldOriginalData[option.id.toString()]!!) {
+
+                        if (item in childsWithSelectedParent || item.parent_id == null)
+                            tempList.add(item)
+                    }
+
 
                     val newOption = FieledRealm().apply {
                         data_type = option.data_type
@@ -195,6 +199,9 @@ class MainViewModel : ViewModel() {
                         options = tempList
                     }
                     realm.insertOrUpdate(newOption)
+                }
+
+
             }
 
         }
@@ -203,7 +210,6 @@ class MainViewModel : ViewModel() {
 
 fun readOfflineCacheCategoriesAndSub() {
     viewModelScope.launch(Dispatchers.Main) {
-
         val db: Realm = Realm.getDefaultInstance()
         val data = db.where(ResultCatRealm::class.java)?.findFirst()
 
