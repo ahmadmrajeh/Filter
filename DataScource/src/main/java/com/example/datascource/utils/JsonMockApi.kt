@@ -15,8 +15,8 @@ class JsonMockApi {
                }
            } catch (ioException: IOException) {
                ioException.printStackTrace()
-               Log.e("jsss","try Failed "+ioException.message)
-               Log.e("jsss","  Failed cause"+ioException.cause)
+               Log.e("jsonErorr","try Failed "+ioException.message)
+               Log.e("jsonErorr","  Failed cause"+ioException.cause)
                return null
 
            }

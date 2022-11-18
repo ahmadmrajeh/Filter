@@ -12,25 +12,24 @@ import java.util.*
 
 class  ParentHolderGrid(
     private val binding: GridParentBinding,
-    listener: (params: List<Any>) -> Any,
+    listener: ( option:RealmOption, isSelected:Boolean ) -> Unit,
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
-    var adapterListener: (params: List<Any>) -> Any = listener
+    var adapterListener = listener
     var realmLiveOptions = passedSelectedOptions
 
     fun bind(result: FieledRealm) {
         selectLabelLanguage(result)
-        val childMembersAdapter = GridAdapter(result?.options, {
-                            adapterListener(listOf(it[0], it[1] , result ))
-        },realmLiveOptions)
+        val childMembers = GridAdapter(result?.options,
+                            adapterListener ,realmLiveOptions)
         val layoutManager = FlexboxLayoutManager(itemView.context)
         layoutManager.flexDirection = FlexDirection.ROW
         layoutManager.justifyContent = JustifyContent.CENTER
         layoutManager.flexWrap=FlexWrap.WRAP
 
 
-        binding.childRecyclerview.adapter = childMembersAdapter
+        binding.childRecyclerview.adapter = childMembers
         binding.childRecyclerview .layoutManager =  layoutManager
     }
 

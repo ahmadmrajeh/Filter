@@ -12,41 +12,36 @@ import java.util.*
 
 class ParentHolder(
     private val binding: ParentItemBinding,
-    listener: (params: List<Any>) -> Any,
-    listener2: (params: List<Any>) -> Any,
-    listener3: (params: List<Any>) -> Any,
-    listener4: (params: List<Any>) -> Any,
-    listener5: (params: List<Any>) -> Any,
+    listener: (option: RealmOption, isSelected:Boolean) -> Unit,
+    listener2:(option: RealmOption, isSelected:Boolean) -> Unit,
+    listener3: (options:RealmList<RealmOption>, fromWhere:String) -> Unit,
+    listener4: (options:RealmList<RealmOption>, fromWhere:String) -> Unit,
+
     viewType: Int,
     passedSelectedOptions: RealmList<RealmOption>
 ) : RecyclerView.ViewHolder(binding.root) {
+
     private var viewTypeTextOrImg = viewType
-    var adapterListener: (params: List<Any>) -> Any = listener
-    var clickListenerImg: (params: List<Any>) -> Any = listener2
-    var adapterListenerDialog: (params: List<Any>) -> Any = listener3
-    var clickListenerImgDialog: (params: List<Any>) -> Any = listener4
+    var adapterListener = listener
+    var clickListenerImg = listener2
+    var adapterListenerDialog = listener3
+    var clickListenerImgDialog = listener4
     var type = viewType
-    var realmLiveOptions = passedSelectedOptions
-    var filteredRealmField = listener5
+    private var realmLiveOptions = passedSelectedOptions
+
 
     fun bind(item: FieledRealm) {
-
-
-
-
-
         selectLabelLanguage(item)
         circleMembersAdapter(item)
         binding.selectedClicked.setOnClickListener {
             if (type == 3) {
-                clickListenerImgDialog(listOf(item.options, "icon"))
+                clickListenerImgDialog(item.options, "icon")
             } else {
-                adapterListenerDialog(listOf(item.options, "string"))
+                adapterListenerDialog(item.options, "string")
             }
         }
 
-
-        var sumText = ""
+   var sumText = ""
         for (items in realmLiveOptions) {
             items?.let {
                 if (it.option_img.isNullOrEmpty() && viewTypeTextOrImg == 1
@@ -65,13 +60,9 @@ class ParentHolder(
 
     private fun circleMembersAdapter(result:FieledRealm ) {
         val childMembersAdapter = ChildMembersAdapter(
-            result.options, {
-                adapterListener(listOf(it[0], it[1] , result ))
-                            }
+            result.options, adapterListener
 
-            , viewTypeTextOrImg, {
-                clickListenerImg(listOf(it[0], it[1] , result ))
-            }, realmLiveOptions
+            , viewTypeTextOrImg, clickListenerImg, realmLiveOptions
         )
         binding.childRecyclerview.layoutManager = LinearLayoutManager(
             itemView.context,

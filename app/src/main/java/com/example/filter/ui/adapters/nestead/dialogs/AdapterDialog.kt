@@ -20,11 +20,13 @@ import io.realm.RealmRecyclerViewAdapter
 internal class AdapterDialog(
     data: OrderedRealmCollection<RealmOption?>?,
     comingFrom: String,
-    listener: List<(params: List<Any>) -> Unit>,
+    listener: List< (option: RealmOption, isSelected:Boolean) -> Unit>,
+    listener2: (option: RealmOption, isSelected:String) -> Unit,
     realmLiveOptions: RealmList<RealmOption>
 ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
-    var adapterListener = listener
+    private var adapterListCircleListener = listener
+    var adapterNumericListener = listener2
     var fromWhere = comingFrom
     var passedSelectedOptions = realmLiveOptions
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
@@ -35,7 +37,7 @@ internal class AdapterDialog(
             VIEW_TYPE_ICON_STRING -> {
                 val view = inflater.inflate(R.layout.icon_child, parent, false)
                 val binding = IconChildBinding.bind(view)
-                ChildHolderIconDialog(binding, adapterListener[0], passedSelectedOptions)
+                ChildHolderIconDialog(binding, adapterListCircleListener[0], passedSelectedOptions)
             }
 
             VIEW_TYPE_NUMERIC -> {
@@ -43,16 +45,15 @@ internal class AdapterDialog(
                 val binding = NumericChildBinding.bind(view)
                 ChildHolderNumericDialog(
                     binding,
-                    adapterListener[2],
-                    fromWhere,
-                    passedSelectedOptions
+                    adapterNumericListener,
+                    fromWhere
                 )
             }
 
             else -> {
                 val view = inflater.inflate(R.layout.text_grandchild, parent, false)
                 val binding = TextGrandchildBinding.bind(view)
-                ChildHolderTextDialog(binding, adapterListener[1], passedSelectedOptions)
+                ChildHolderTextDialog(binding, adapterListCircleListener[1], passedSelectedOptions)
             }
         }
     }

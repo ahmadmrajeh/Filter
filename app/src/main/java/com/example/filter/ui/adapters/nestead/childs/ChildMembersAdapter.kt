@@ -18,16 +18,16 @@ import io.realm.RealmRecyclerViewAdapter
 
 internal class ChildMembersAdapter(
     data: OrderedRealmCollection<RealmOption?>?,
-    listener: (params: List<Any>) -> Any,
+    listener: (option: RealmOption, isSelected:Boolean) -> Unit,
     viewType: Int,
-    listener2: (params: List<Any>) -> Any,
+    listener2: (option: RealmOption, isSelected:Boolean)-> Unit,
     realmLiveOptions: RealmList<RealmOption>
 ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
     var passedSelectedOptions = realmLiveOptions
-    var adapterListener: (params: List<Any>) -> Any = listener
-    var clickListenerImg: (params: List<Any>) -> Any = listener2
-    var viewTypeTextOrImg = viewType
+    var adapterListener  = listener
+    var clickListenerImg = listener2
+    private var viewTypeTextOrImg = viewType
 
 
     override fun getItemViewType(position: Int): Int {
@@ -46,8 +46,6 @@ internal class ChildMembersAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val obj = getItem(position)
-        Log.i("Binding", "Binding view holder: ${obj?.label}")
-
         when (holder) {
             is ChildHolderCircle -> {
                 holder.bind(obj!!)

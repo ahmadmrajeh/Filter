@@ -9,21 +9,21 @@ import java.util.*
 
 class ParentHolderNumeric(
     private val binding: ParentNumricBinding,
-    listener: (params: List<Any>) -> Any,
+    listener: (options:RealmList<RealmOption>,fromWhere:String) -> Unit,
     optionSelector: RealmList<RealmOption>
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    var adapterListener: (params: List<Any>) -> Any = listener
+    var adapterListener: (options:RealmList<RealmOption>,fromWhere:String) -> Unit = listener
     var passedSelectedOptions = optionSelector
 
     fun bind(result: FieledRealm?) {
         selectLabelLanguage(result)
         binding.From.setOnClickListener {
-            adapterListener(listOf(result!!.options, "numericFrom"))
+            adapterListener(result!!.options, "numericFrom")
         }
 
         binding.To.setOnClickListener {
-            adapterListener(listOf(result!!.options, "numericTo"))
+            adapterListener(result!!.options, "numericTo")
         }
 
 

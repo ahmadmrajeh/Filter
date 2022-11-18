@@ -47,7 +47,7 @@ class MainViewModel : ViewModel() {
         .build()
 
 
-    private   var childrenWithSelectedParent: RealmList<RealmOption>  = RealmList()
+    private var childrenWithSelectedParent: RealmList<RealmOption> = RealmList()
 
     private fun optionJsonToKotlin(applicationContext: Context, orderedFields: SearchRes, id: Int) {
         val jsonFileString = JsonMockApi.getJsonDataFromAsset(
@@ -95,7 +95,7 @@ class MainViewModel : ViewModel() {
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             apiDataCategory = repository.apiDataCategory(modelItem)
-            val realmWrite = Realm.getDefaultInstance( )
+            val realmWrite = Realm.getDefaultInstance()
             repository.insertItemToRealm(apiDataCategory, realmWrite)
         }
     }
@@ -107,7 +107,7 @@ class MainViewModel : ViewModel() {
         id: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val realmWrite = Realm.getDefaultInstance( )
+            val realmWrite = Realm.getDefaultInstance()
             repository.insertFieldsToRealm(optionsAndFields, orderedFields, realmWrite, id)
         }
     }
@@ -116,15 +116,12 @@ class MainViewModel : ViewModel() {
     fun updateOption(
         option: RealmOption,
         selected: Boolean,
-        fromWhere: String?,
-        fieledRealm: FieledRealm
+        fromWhere: String?
     ) {
 
         viewModelScope.launch(Dispatchers.Main) {
             val realmWrite = Realm.getDefaultInstance()
-
             realmWrite.executeTransactionAwait(Dispatchers.Main) {
-
                 val newOption = RealmOption().apply {
                     field_id = option.field_id
                     has_child = option.has_child
@@ -139,34 +136,25 @@ class MainViewModel : ViewModel() {
                     whereFrom = fromWhere
                     parentIsSelected = false
                 }
-                try {
-                    it.insertOrUpdate(newOption)
-                }catch (e: java.lang.Exception){
-                    Log.e("opsss" , e.message.toString())
-                }
-
-
-
+                it.insertOrUpdate(newOption)
             }
-            updateChildOptions(option, selected,fieledRealm)
+            updateChildOptions(option, selected)
         }
-
-
     }
 
     private fun updateChildOptions(
         option: RealmOption,
-        selectedParent: Boolean,
-        filedRealm: FieledRealm,
+        selectedParent: Boolean
     ) {
 
-val modifiedFields: ArrayList<String> = ArrayList()
+        val modifiedFields: ArrayList<String> = ArrayList()
 
         viewModelScope.launch(Dispatchers.Main) {
             val realmWrite = Realm.getDefaultInstance()
             realmWrite.executeTransactionAwait(Dispatchers.Main) {
-
-                val data = realmWrite.where(RealmOption::class.java)?.equalTo("parent_id", option.id)?.findAll()
+                val data =
+                    realmWrite.where(RealmOption::class.java)?.equalTo("parent_id", option.id)
+                        ?.findAll()
                 //this option is the parent of the elements in data
                 if (data != null) {
                     for (item in data) {
@@ -187,33 +175,19 @@ val modifiedFields: ArrayList<String> = ArrayList()
                             whereFrom = item.whereFrom
                             parentIsSelected = selectedParent
                         }
-
-
-                        try {
-                            it.insertOrUpdate(newOption)
-                        }catch (e: java.lang.Exception){
-                            Log.e("opsss" , e.message.toString())
-                        }
+                        it.insertOrUpdate(newOption)
                     }
-
-                    Log.e(
-                        "numerictracesSSSSS",
-                        childrenWithSelectedParent.toString()
-                    )
                 }
 
             }
-            updateOptionsList(childrenWithSelectedParent,modifiedFields)
+            updateOptionsList(modifiedFields)
         }
 
     }
 
     private fun updateOptionsList(
-        childrenWithSelectedParent: RealmList<RealmOption>,
         modifiedFields: ArrayList<String>
-    ){
-
-
+    ) {
         viewModelScope.launch(Dispatchers.Main) {
             val realmWrite = Realm.getDefaultInstance()
 
@@ -221,25 +195,19 @@ val modifiedFields: ArrayList<String> = ArrayList()
 
                 val tempList: RealmList<RealmOption> = RealmList()
 
-                    for (item in HashSet(modifiedFields )) {
+                for (item in HashSet(modifiedFields)) {
 
-                        val data = realmWrite.where(FieledRealm::class.java)?.equalTo("id", item.toInt())?.findFirst()
-                        data?.let { modifyField(it) }
-
-                    }
+                    val data =
+                        realmWrite.where(FieledRealm::class.java)?.equalTo("id", item.toInt())
+                            ?.findFirst()
+                    data?.let { modifyField(it) }
+                }
             }
-
-
         }
-
-
     }
 
 
-
-
-
-   private fun modifyField(
+    private fun modifyField(
         offlineField: FieledRealm
     ) {
 
@@ -250,54 +218,33 @@ val modifiedFields: ArrayList<String> = ArrayList()
             realmWrite.executeTransactionAwait(Dispatchers.Main) { realm ->
 
                 if (fieldOriginalData[offlineField.id.toString()]?.name.isNullOrEmpty()) {
-                    fieldOriginalData[offlineField.id.toString()] =  realmWrite.copyFromRealm(offlineField)
-
+                    fieldOriginalData[offlineField.id.toString()] =
+                        realmWrite.copyFromRealm(offlineField)
                 }
-
                 val tempList: RealmList<RealmOption> = RealmList()
-
-
                 fieldOriginalData[offlineField.id.toString()]?.let {
                     for (item in it.options) {
                         val existed = childrenWithSelectedParent.find { i ->
                             item.id == i.id
                         }
-                        if (!existed?.id.isNullOrEmpty()|| item.parent_id == null)
+                        if (!existed?.id.isNullOrEmpty() || item.parent_id == null)
                             tempList.add(item)
-
-
-
-
                     }
                 }
 
-
-
-                    val newOption = FieledRealm().apply {
-                        data_type = offlineField.data_type
-                        id = offlineField.id
-                        name = offlineField.name
-                        parent_id = offlineField.parent_id
-                        parent_name = offlineField.parent_name
-                        label_ar = offlineField.label_ar
-                        label_en = offlineField.label_en
-                        options = tempList
-
-                    }
-                    try {
-                        realm.insertOrUpdate(newOption)
-                    }catch (e: java.lang.Exception){
-                        Log.e("opsss" , e.message.toString())
-                    }
-
-
-
+                val newOption = FieledRealm().apply {
+                    data_type = offlineField.data_type
+                    id = offlineField.id
+                    name = offlineField.name
+                    parent_id = offlineField.parent_id
+                    parent_name = offlineField.parent_name
+                    label_ar = offlineField.label_ar
+                    label_en = offlineField.label_en
+                    options = tempList
+                }
+                realm.insertOrUpdate(newOption)
             }
-
-
         }
-
-
     }
 
 
@@ -305,7 +252,6 @@ val modifiedFields: ArrayList<String> = ArrayList()
         viewModelScope.launch(Dispatchers.Main) {
             val db: Realm = Realm.getDefaultInstance()
             val data = db.where(ResultCatRealm::class.java)?.findFirst()
-
             data?.let {
                 result.postValue(it)
             }

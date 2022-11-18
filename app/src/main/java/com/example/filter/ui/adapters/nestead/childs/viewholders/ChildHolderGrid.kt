@@ -14,7 +14,7 @@ import kotlin.collections.ArrayList
 
 class ChildHolderGrid(
     private val binding: ChildGridBinding,
-    adapterListener: (params: List<Any>) -> Any,
+    adapterListener: (option: RealmOption, isSelected:Boolean)  -> Unit,
     selectedFromLive: RealmList<RealmOption>
 ) : RecyclerView.ViewHolder(binding.root) {
     var listener = adapterListener
@@ -43,11 +43,11 @@ class ChildHolderGrid(
         if (item!!.isSelected
         ) {
             notInSelectedItems()
-            listener(listOf(item,  false))
+            listener(item,  false)
 
         } else {
             inSelectedItems()
-            listener(listOf(item,  true))
+            listener(item,  true)
         }
     }
 

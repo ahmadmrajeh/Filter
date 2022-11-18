@@ -13,7 +13,7 @@ import java.util.*
 
 class ChildHolderTextCircle(
     private val binding: ChildItemTextCircleBinding,
-    adapterListener: (params: List<Any>) -> Any,
+    adapterListener: (option: RealmOption, isSelected:Boolean) -> Unit,
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -36,10 +36,10 @@ class ChildHolderTextCircle(
         if (item!!.isSelected
         ) {
             notInSelectedItems()
-            listener(listOf(item, false))
+            listener(item, false)
         } else {
             inSelectedItems()
-            listener(listOf(item,true))
+            listener(item, false)
         }
     }
 

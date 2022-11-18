@@ -1,6 +1,5 @@
 package com.example.filter.ui.adapters.nestead.childs
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,12 +13,12 @@ import io.realm.RealmRecyclerViewAdapter
 
 internal class GridAdapter(
     data: OrderedRealmCollection<RealmOption?>?,
-    listener: (params: List<Any>) -> Any,
+    listener: (option: RealmOption, isSelected: Boolean) -> Unit,
     realmLiveOptions: RealmList<RealmOption>
 ) :
     RealmRecyclerViewAdapter<RealmOption?, RecyclerView.ViewHolder>(data, true) {
-    var adapterListener: (params: List<Any>) -> Any = listener
-    var selectedFromLive = realmLiveOptions
+    var adapterListener = listener
+    private var selectedFromLive = realmLiveOptions
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.child_grid, parent, false)

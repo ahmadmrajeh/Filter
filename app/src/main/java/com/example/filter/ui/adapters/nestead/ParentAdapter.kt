@@ -1,6 +1,5 @@
 package com.example.filter.ui.adapters.nestead
 
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -23,11 +22,13 @@ import io.realm.RealmRecyclerViewAdapter
 
 internal class ParentAdapter(
     data: OrderedRealmCollection<FieledRealm?>?,
-    listener: List<(params: List<Any>) -> Any>,
+    listener: List<(option: RealmOption, isSelected:Boolean)-> Unit>,
+    listener2: List<(options:RealmList<RealmOption>,fromWhere:String)  -> Unit>,
     realmLiveOptions: RealmList<RealmOption>
 ) :
     RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
-    var listOfListeners: List<(params: List<Any>) -> Any> = listener
+    private var listOfOptionListeners  = listener
+    private var listOfFieldListeners  = listener2
     var passedSelectedOptions = realmLiveOptions
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -38,13 +39,9 @@ internal class ParentAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
-
         when (holder) {
             is ParentHolder -> {
-
-
                 holder.bind(obj!!)
-
             }
             is ParentHolderNumeric -> {
                 holder.bind(obj)
@@ -80,13 +77,13 @@ internal class ParentAdapter(
         VIEW_TYPE_GRID -> {
             val view = inflater.inflate(R.layout.grid_parent, parent, false)
             val binding = GridParentBinding.bind(view)
-            ParentHolderGrid(binding, listOfListeners[0], passedSelectedOptions)
+            ParentHolderGrid(binding, listOfOptionListeners[0], passedSelectedOptions)
         }
 
         VIEW_TYPE_NUMERIC -> {
             val view = inflater.inflate(R.layout.parent_numric, parent, false)
             val binding = ParentNumricBinding.bind(view)
-            ParentHolderNumeric(binding, listOfListeners[1], passedSelectedOptions)
+            ParentHolderNumeric(binding, listOfFieldListeners[0], passedSelectedOptions)
         }
 
         else -> {
@@ -94,11 +91,10 @@ internal class ParentAdapter(
             val binding = ParentItemBinding.bind(view)
             ParentHolder(
                 binding,
-                listOfListeners[2],
-                listOfListeners[3],
-                listOfListeners[4],
-                listOfListeners[5],
-                listOfListeners[6],
+                listOfOptionListeners[1],
+                listOfOptionListeners[2],
+                listOfFieldListeners[1],
+                listOfFieldListeners[2],
                 viewType,
                 passedSelectedOptions
             )

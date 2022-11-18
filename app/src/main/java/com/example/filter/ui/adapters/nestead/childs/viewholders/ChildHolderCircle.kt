@@ -12,7 +12,7 @@ import io.realm.RealmList
 
 class ChildHolderCircle(
     private val binding: ChildItemBinding,
-    clickListenerImg: (params: List<Any>) -> Any,
+    clickListenerImg: (option: RealmOption, isSelected:Boolean)  -> Unit,
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -38,10 +38,10 @@ class ChildHolderCircle(
     private fun handleClick(item: RealmOption?) {
         if (item!!.isSelected) {
             notInSelectedItems()
-            listener(listOf(item, false))
+            listener(item, false)
         } else {
             inSelectedItems()
-            listener(listOf(item, true))
+            listener(item, true)
         }
     }
 

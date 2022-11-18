@@ -14,7 +14,7 @@ import java.util.*
 
 class ChildHolderIconDialog(
     private val binding: IconChildBinding,
-    clickListenerImg: (params: List<Any>) -> Unit,
+    clickListenerImg: (option: RealmOption, isSelected:Boolean) -> Unit,
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -42,10 +42,10 @@ class ChildHolderIconDialog(
     private fun handleClick(item: RealmOption?) {
         if (item!!.isSelected) {
             binding.checkBox.isChecked = false
-            listener(listOf(item, false))
+            listener(item, false)
         } else {
             binding.checkBox.isChecked = true
-            listener(listOf(item,true))
+            listener(item,true)
         }
     }
     private fun selectLabelLanguage(item:RealmOption?) {

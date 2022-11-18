@@ -71,50 +71,43 @@ class FilterFragment : Fragment() {
     ):
             ParentAdapter {
         return ParentAdapter(data, listOf(
-            { obj ->
-                //grid
-                handleOptionPressed(obj)
+            { option , selection  ->
+                handleOptionPressed(option,selection)
 
-            }, { obj ->
-                // numeric
-                showDialog(obj)
+            }, {  option , selection  ->
+                handleOptionPressed(option,selection )
 
-            }, { obj ->
-                handleOptionPressed(obj)
-
-            }, { obj ->
-                handleOptionPressed(obj)
-            } ,{  obj ->
-                // iconDialog
-                showDialog(obj)
-
-           }, {  obj ->
-                //textDialog
-                showDialog(obj)
-
-             } , {
-                 //update circle data
+            }, {  option , selection  ->
+                handleOptionPressed(option,selection )
 
             }
-           ) , realmLiveOptions
+           ) , listOf({ field, whereFrom->
+                      showDialog(field,whereFrom)
+        },{field, whereFrom->
+            showDialog(field,whereFrom)
+
+        },{field, whereFrom->
+            showDialog(field,whereFrom)
+
+        }), realmLiveOptions
         )
     }
 
-    private fun showDialog(obj: List<Any>) {
-        DialogListFragment(obj[0] as RealmList<RealmOption>, obj[1] as String).show(
+    private fun showDialog(field:RealmList<RealmOption>, whereFrom:String) {
+        DialogListFragment(field,whereFrom).show(
             childFragmentManager, DialogListFragment.TAG
         )
     }
 
-    private fun handleOptionPressed(obj: List<Any>) {
-        if ( obj[1] == true/* insert*/) {
-            sharedViewModel.updateOption(obj[0] as RealmOption, true, "",obj[2] as FieledRealm)
-             sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
+    private fun handleOptionPressed(option:RealmOption, isSelected:Boolean) {
+        if ( isSelected/* insert*/) {
+            sharedViewModel.updateOption(option, true, "" )
+             sharedViewModel.selectedOptions.value?.add(option)
 
 
-        } else if ( obj[1] == false) {
-            sharedViewModel.updateOption(obj[0] as RealmOption, false, "", obj[2] as FieledRealm)
-             sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
+        } else  {
+            sharedViewModel.updateOption(option, false, "" )
+             sharedViewModel.selectedOptions.value?.remove(option)
 
         }
     }

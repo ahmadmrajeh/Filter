@@ -11,7 +11,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.datascource.realm.filter.FieledRealm
 import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.R
 import com.example.filter.databinding.FragmentDialogBinding
@@ -118,41 +117,42 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
 
     private fun AdapterDialog(data: RealmList<RealmOption>, comingFrom: String): AdapterDialog {
         return AdapterDialog(data, comingFrom, listOf(
-            { obj -> // icon
-                handleOptionsSelected(obj)
+            { option , selection  ->
+                handleOptionPressed(option,selection)
 
-            }, { obj -> //text
-                handleOptionsSelected(obj)
-            }, {
-                    obj -> //numeric
-                handleNumericChanged(obj)
-                dismiss()
-            }
+            }, { option , selection ->
+                handleOptionPressed(option,selection)
+            },
         ),
+            { option, selectedFrom -> //numeric
+            handleNumericChanged(option, selectedFrom)
+            dismiss()
+        },
             realmLiveOptions)
     }
 
-    private fun handleNumericChanged(obj: List<Any>) {
-        val option = obj[0] as RealmOption
+    private fun handleNumericChanged(option: RealmOption, selectedFrom: String) {
         val temp = sharedViewModel.selectedOptions.value?.find {
-            it.field_id == option.field_id && it.whereFrom == obj[1]
-
+            it.field_id == option.field_id && it.whereFrom == selectedFrom
         }
+
         temp?.let {
             sharedViewModel.selectedOptions.value?.remove(it)
-            sharedViewModel.updateOption(option, false, obj[1] as String, obj[2] as FieledRealm)
+            sharedViewModel.updateOption(option, false,selectedFrom)
         }
-        sharedViewModel.updateOption(option, true, obj[1] as String, obj[2] as FieledRealm)
+        sharedViewModel.updateOption(option, true,selectedFrom)
         sharedViewModel.selectedOptions.value?.add(option)
     }
 
-    private fun handleOptionsSelected(obj: List<Any>) {
-        if ( obj[1] == true/*insert */) {
-            sharedViewModel.updateOption(obj[0] as RealmOption, true, "", obj[2] as FieledRealm)
-            sharedViewModel.selectedOptions.value?.add(obj[0] as RealmOption)
-        } else if (obj[1] == false) {
-            sharedViewModel.updateOption(obj[0] as RealmOption, false, "", obj[2] as FieledRealm)
-            sharedViewModel.selectedOptions.value?.remove(obj[0] as RealmOption)
+    private fun handleOptionPressed(option:RealmOption, isSelected:Boolean) {
+        if ( isSelected/* insert*/) {
+            sharedViewModel.updateOption(option, true, "" )
+            sharedViewModel.selectedOptions.value?.add(option)
+
+
+        } else  {
+            sharedViewModel.updateOption(option, false, "" )
+            sharedViewModel.selectedOptions.value?.remove(option)
         }
     }
 }

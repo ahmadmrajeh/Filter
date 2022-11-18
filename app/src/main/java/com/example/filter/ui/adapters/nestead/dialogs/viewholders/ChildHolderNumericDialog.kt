@@ -9,9 +9,9 @@ import java.util.*
 
 class ChildHolderNumericDialog(
     private val binding: NumericChildBinding,
-    function: (params: List<Any>) -> Unit,
-    fromWhere: String,
-    passedSelectedOptions: RealmList<RealmOption>
+    function: (option: RealmOption, isSelected:String) -> Unit,
+    fromWhere: String
+
 ) :
     RecyclerView.ViewHolder(binding.root) {
 var buttonChoosed =  fromWhere
@@ -19,8 +19,8 @@ var listener =function
     fun bind(item: RealmOption?) {
 
    binding.root.setOnClickListener {
-      listener( listOf(item!!,buttonChoosed )
-      ) }
+      listener( item!!,buttonChoosed )
+       }
         selectLabelLanguage(item)
    }
 

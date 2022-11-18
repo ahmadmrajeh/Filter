@@ -11,7 +11,7 @@ import java.util.*
 
 class ChildHolderTextDialog(
     private val binding: TextGrandchildBinding,
-    clickListener: (params: List<Any>) -> Unit,
+    clickListener:(option:RealmOption, isSelected:Boolean) -> Unit,
     passedSelectedOptions: RealmList<RealmOption>
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -21,26 +21,21 @@ class ChildHolderTextDialog(
     fun bind(item: RealmOption?) {
         binding.root.setOnClickListener{
         }
-
-        selectLabelLanguage(item)
-
-
+            selectLabelLanguage(item)
             binding.checkBox.isChecked = item!!.isSelected
-
             binding.root.visibility = View.VISIBLE
             binding.checkBox.setOnClickListener {
                 handleClick(item)
             }
-
     }
 
     private fun handleClick(item: RealmOption?) {
         if (item!!.isSelected) {
             binding.checkBox.isChecked = false
-            listener(listOf(item,false))
+            listener(item, false)
         } else {
             binding.checkBox.isChecked = true
-            listener(listOf(item,true))
+            listener(item, true)
         }
     }
 
