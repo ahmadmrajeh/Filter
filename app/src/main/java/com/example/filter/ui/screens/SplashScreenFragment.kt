@@ -21,20 +21,19 @@ lateinit var binding: FragmentSplashScreenBinding
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSplashScreenBinding.inflate(inflater)
 
-
-        sharedViewModel.catJsonToKotlin(requireActivity().applicationContext)
-
+        if (sharedViewModel.appLunched) {
+            requireActivity().finish()
+        } else{
+            binding = FragmentSplashScreenBinding.inflate(inflater)
+            sharedViewModel.catJsonToKotlin(requireActivity().applicationContext)
+            sharedViewModel.appLunched = true
         Handler(Looper.getMainLooper()).postDelayed({
             findNavController().navigate(
-             SplashScreenFragmentDirections.actionSplashScreenFragmentToMainFragment()
+                SplashScreenFragmentDirections.actionSplashScreenFragmentToMainFragment()
             )
         }, 1000)
-
-
-        return binding.root
+        }
+    return binding.root
     }
-
-
 }

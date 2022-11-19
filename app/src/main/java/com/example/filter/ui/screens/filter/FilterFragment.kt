@@ -1,25 +1,29 @@
 package com.example.filter.ui.screens.filter
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.datascource.realm.filter.FieledRealm
 import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.databinding.FragmentFilterBinding
 import com.example.filter.ui.adapters.nestead.ParentAdapter
+import com.example.filter.ui.screens.SplashScreenFragmentDirections
 import com.example.filter.ui.screens.viewmodel.MainViewModel
 import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-@Suppress("UNCHECKED_CAST")
 class FilterFragment : Fragment() {
 
     private   var realmLiveOptions: RealmList<RealmOption> = RealmList()
@@ -27,8 +31,8 @@ class FilterFragment : Fragment() {
     private lateinit var binding: FragmentFilterBinding
     private lateinit var mAdapter: ParentAdapter
     private lateinit var rlmRstList: RealmList<FieledRealm>
-    private val args: FilterFragmentArgs by navArgs()
 
+    private val args: FilterFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +40,7 @@ class FilterFragment : Fragment() {
     ): View {
         binding = FragmentFilterBinding.inflate(inflater)
         requireActivity().title = "Filter"
-        sharedViewModel.subFlowJsonToKotlin(
+        sharedViewModel.subFlowJsonToKotlin (
             requireContext().applicationContext, args.id
         )
         sharedViewModel.readOfflineCacheFields(args.id)
@@ -47,15 +51,26 @@ class FilterFragment : Fragment() {
 
     private fun observeData() {
         sharedViewModel.resultFilter.observe(viewLifecycleOwner) {
+            sharedViewModel.firstEverRunApp =  true
             rlmRstList = it.fieldsList
             setUpRecyclerView()
          }
+
+        if (!sharedViewModel.firstEverRunApp) {   sharedViewModel.firstEverRunApp =  true
+            Handler(Looper.getMainLooper()).postDelayed({
+                findNavController().navigate(
+                    FilterFragmentDirections.actionFilterFragmentSelf(args.id)
+                )
+            }, 1000)
+        }
+
+
        sharedViewModel.selectedOptions.observe(viewLifecycleOwner){selected: RealmList<RealmOption> ->
             realmLiveOptions = selected
         }
     }
 
-    private fun setUpRecyclerView()    {
+    private fun setUpRecyclerView() {
         if (rlmRstList.isNotEmpty()) {
             mAdapter = parentAdapterInstance(rlmRstList,realmLiveOptions)
             lifecycleScope.launch(Dispatchers.Main) {
@@ -63,13 +78,13 @@ class FilterFragment : Fragment() {
                 binding.RcyclerFilter.layoutManager = LinearLayoutManager(requireContext())
             }
         }
+
     }
 
     private fun parentAdapterInstance(
         data: RealmList<FieledRealm>,
         realmLiveOptions: RealmList<RealmOption>
-    ):
-            ParentAdapter {
+    ): ParentAdapter {
         return ParentAdapter(data, listOf(
             { option , selection  ->
                 handleOptionPressed(option,selection)
@@ -88,7 +103,6 @@ class FilterFragment : Fragment() {
 
         },{field, whereFrom->
             showDialog(field,whereFrom)
-
         }), realmLiveOptions
         )
     }
@@ -104,11 +118,9 @@ class FilterFragment : Fragment() {
             sharedViewModel.updateOption(option, true, "" )
              sharedViewModel.selectedOptions.value?.add(option)
 
-
         } else  {
             sharedViewModel.updateOption(option, false, "" )
              sharedViewModel.selectedOptions.value?.remove(option)
-
         }
     }
 }

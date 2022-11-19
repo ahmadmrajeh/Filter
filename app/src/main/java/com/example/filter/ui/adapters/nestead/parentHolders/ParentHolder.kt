@@ -50,13 +50,12 @@ class ParentHolder(
                     sumText += it.label_en + ", "
                 else if (viewTypeTextOrImg == 3 && item.id.toString() == it.field_id)
                     sumText += it.label_en + ", "
-                else if (it.label_en != "Any" && item.id.toString() == it.field_id) sumText =
+                else if (it.label_en == "Any" && item.id.toString() == it.field_id) sumText =
                     "Any"
             }
         }
         binding.selected.text = sumText
     }
-
 
     private fun circleMembersAdapter(result:FieledRealm ) {
         val childMembersAdapter = ChildMembersAdapter(

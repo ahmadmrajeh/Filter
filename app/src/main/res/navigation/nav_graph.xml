@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_filterFragment_to_dialogFragment"
             app:destination="@id/dialogFragment" />
+        <action
+            android:id="@+id/action_filterFragment_self"
+            app:destination="@id/filterFragment" />
 
     </fragment>
 

@@ -47,35 +47,30 @@ class RealmFilterOperations {
             val listElem = orderedFields.result.data.fields_labels.find {
                 it.field_name == item
             }
-
             val temp: Field? = optionsAndFields.result.data.fields.find {
                 it.name == item
-
             }
             val optionsForCurrentField: List<Option> = optionsAndFields.result.data.options.filter {
                 temp!!.id.toString() == it.field_id
             }
             val realmOptions: RealmList<RealmOption> = RealmList()
             realmOptions.add(
-
                 RealmOption(
-                    temp?.id.toString(), "1", countAni.toString(), "اي",
+                    (-1 * temp?.id!!).toString(), "1", countAni.toString(), "اي",
                     "Any",
                     null,
                     "", null, null, false, "" ,false
                 )
             )
+
             realmOptions.addAll(changeOptionsTypeToRealm(optionsForCurrentField))
-
-            temp?.let { field ->
-
+            temp.let { field ->
                 fieldsRealmList.add(
                     FieledRealm(
                         field.data_type, field.id, field.name, field.parent_id,
                         field.parent_name, listElem!!.label_ar, listElem.label_en, realmOptions
                     )
                 )
-
             }
         }
     }
@@ -93,7 +88,6 @@ class RealmFilterOperations {
                         element.order, element.parent_id, element.value, false, "",false
                     )
                 )
-
             } else {
                 returnedList.add(
                     RealmOption(
@@ -110,7 +104,7 @@ class RealmFilterOperations {
         return returnedList
     }
 
-    fun getApiFields(
+    private fun getApiFields(
         optionsAndFields: OptionsResponse,
         orderedFields: SearchRes,
         id: Int

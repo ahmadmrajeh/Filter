@@ -33,20 +33,9 @@ class MainViewModel : ViewModel() {
     var result: MutableLiveData<ResultCatRealm> = MutableLiveData()
     var resultFilter: MutableLiveData<FilterSubCategory> = MutableLiveData()
     var selectedOptions: MutableLiveData<RealmList<RealmOption>> = MutableLiveData()
-    private var timesClicked: Int = 1
-    var timesExecuted: Int = 0
     private val fieldOriginalData = HashMap<String, FieledRealm>()
-
-    private var config = RealmConfiguration.Builder().schemaVersion(7).modules(
-        AppModules()
-    )
-        .deleteRealmIfMigrationNeeded()
-        .name("realm.db")
-        .allowQueriesOnUiThread(true)
-        .allowWritesOnUiThread(true)
-        .build()
-
-
+    var appLunched = false
+    var firstEverRunApp = false
     private var childrenWithSelectedParent: RealmList<RealmOption> = RealmList()
 
     private fun optionJsonToKotlin(applicationContext: Context, orderedFields: SearchRes, id: Int) {
@@ -112,12 +101,13 @@ class MainViewModel : ViewModel() {
         }
     }
 
-
     fun updateOption(
         option: RealmOption,
         selected: Boolean,
         fromWhere: String?
     ) {
+        Log.e("AnyProblem", option.toString())
+        Log.e("AnyProblem", selected.toString())
 
         viewModelScope.launch(Dispatchers.Main) {
             val realmWrite = Realm.getDefaultInstance()
@@ -148,7 +138,6 @@ class MainViewModel : ViewModel() {
     ) {
 
         val modifiedFields: ArrayList<String> = ArrayList()
-
         viewModelScope.launch(Dispatchers.Main) {
             val realmWrite = Realm.getDefaultInstance()
             realmWrite.executeTransactionAwait(Dispatchers.Main) {
@@ -273,10 +262,10 @@ class MainViewModel : ViewModel() {
     }
 
     private fun initializeFields(db: Realm) {
- val realmOptionInit =    db.where(RealmOption::class.java).equalTo("id","143").findFirst()
+        val realmOptionInit = db.where(RealmOption::class.java).equalTo("id", "143").findFirst()
         realmOptionInit?.let {
-            updateOption(it,true,"")
-            updateOption(it,false,"")
+            updateOption(it, true, "")
+            updateOption(it, false, "")
         }
 
     }
