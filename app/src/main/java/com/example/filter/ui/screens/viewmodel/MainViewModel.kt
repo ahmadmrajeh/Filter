@@ -268,7 +268,17 @@ class MainViewModel : ViewModel() {
                 copyOfDaFieldsData.postValue(param)
 
             }
+            initializeFields(db)
         }
+    }
+
+    private fun initializeFields(db: Realm) {
+ val realmOptionInit =    db.where(RealmOption::class.java).equalTo("id","143").findFirst()
+        realmOptionInit?.let {
+            updateOption(it,true,"")
+            updateOption(it,false,"")
+        }
+
     }
 }
 
