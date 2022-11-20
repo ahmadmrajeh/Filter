@@ -101,6 +101,4 @@ internal class ChildMembersAdapter(
             childHolderTextCircle(inflater, parent)
         }
     }
-
-
 }

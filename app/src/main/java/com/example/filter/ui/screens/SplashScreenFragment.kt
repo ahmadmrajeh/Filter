@@ -31,9 +31,9 @@ lateinit var binding: FragmentSplashScreenBinding
         Handler(Looper.getMainLooper()).postDelayed({
             findNavController().navigate(
                 SplashScreenFragmentDirections.actionSplashScreenFragmentToMainFragment()
-            )
-        }, 1000)
-        }
+             )
+           }, 1000)
+         }
     return binding.root
     }
 }

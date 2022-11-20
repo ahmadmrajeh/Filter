@@ -39,10 +39,9 @@ class ChildHolderTextCircle(
             listener(item, false)
         } else {
             inSelectedItems()
-            listener(item, false)
+            listener(item, true)
         }
     }
-
 
     private fun notInSelectedItems() {
         binding.constraint.background = ContextCompat.getDrawable(
@@ -65,5 +64,4 @@ class ChildHolderTextCircle(
             binding.stringCircle.text = item?.label
         }
     }
-
 }
