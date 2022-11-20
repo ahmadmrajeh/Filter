@@ -1,13 +1,11 @@
 package com.example.filter.ui.screens.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.datascource.model.options.OptionsResponse
 import com.example.datascource.model.searchRes.SearchRes
-import com.example.datascource.realm.AppModules
 import com.example.datascource.realm.category.CatItemRlm
 import com.example.datascource.realm.category.ResultCatRealm
 import com.example.datascource.realm.filter.FieledRealm
@@ -18,7 +16,6 @@ import com.example.filter.utils.JsonMockApi
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import io.realm.RealmList
 import io.realm.kotlin.executeTransactionAwait
 import kotlinx.coroutines.Dispatchers
@@ -106,6 +103,8 @@ class MainViewModel : ViewModel() {
         selected: Boolean,
         fromWhere: String?
     ) {
+
+
         viewModelScope.launch(Dispatchers.Main) {
             val realmWrite = Realm.getDefaultInstance()
             realmWrite.executeTransactionAwait(Dispatchers.Main) {
@@ -125,7 +124,23 @@ class MainViewModel : ViewModel() {
                 }
                 it.insertOrUpdate(newOption)
             }
+            if (option.label_en == "Any")
+            {  unSelectOtherOptionsInThisField(option.field_id,fromWhere)
+
+            } else
            updateChildOptions(option, selected)
+        }
+    }
+
+    private fun unSelectOtherOptionsInThisField(fieldId: String?, fromWhere: String?) {
+      val anyList =  selectedOptions.value?.filter {
+            it.field_id ==fieldId
+        }
+        if (anyList != null) {
+            for (unselect in anyList)
+                  if(unselect.label_en!="Any")   { updateOption(unselect,false,fromWhere)
+                  selectedOptions.value?.remove(unselect)
+                  }
         }
     }
 

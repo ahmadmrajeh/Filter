@@ -38,6 +38,7 @@ class RealmFilterOperations {
         optionsAndFields: OptionsResponse,
         fieldsRealmList: RealmList<FieledRealm>
     ) {
+
         val tempList: SearchFlow? = orderedFields.result.data.search_flow.find {
             it.category_id == id
         }
@@ -56,7 +57,7 @@ class RealmFilterOperations {
             val realmOptions: RealmList<RealmOption> = RealmList()
             realmOptions.add(
                 RealmOption(
-                    null, "1",   (-1*temp!!.id).toString(), "اي",
+                    temp!!.id.toString(), "1",   (-1*temp!!.id).toString(), "اي",
                     "Any",
                     null,
                     "", null, null, false, "" ,false

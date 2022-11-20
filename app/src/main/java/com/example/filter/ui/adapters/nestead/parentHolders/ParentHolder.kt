@@ -48,7 +48,7 @@ class ParentHolder(
                     && it.label_en != "Any" && item.id.toString() == it.field_id
                 )
                     sumText += it.label_en + ", "
-                else if (viewTypeTextOrImg == 3 && item.id.toString() == it.field_id)
+                else if (viewTypeTextOrImg == 3 && item.id.toString() == it.field_id   && it.label_en != "Any")
                     sumText += it.label_en + ", "
                 else if (it.label_en == "Any" && item.id.toString() == it.field_id) sumText =
                     "Any"
