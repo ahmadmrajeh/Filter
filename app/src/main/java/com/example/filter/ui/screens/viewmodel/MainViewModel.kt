@@ -32,7 +32,6 @@ class MainViewModel : ViewModel() {
     var selectedOptions: MutableLiveData<RealmList<RealmOption>> = MutableLiveData()
     private val fieldOriginalData = HashMap<String, FieledRealm>()
      var appLunched = false
-     var firstEverRunApp = false
     private var childrenWithSelectedParent: RealmList<RealmOption> = RealmList()
 
     private fun optionJsonToKotlin(applicationContext: Context, orderedFields: SearchRes, id: Int) {

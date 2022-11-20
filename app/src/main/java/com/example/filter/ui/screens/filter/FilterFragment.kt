@@ -51,7 +51,6 @@ class FilterFragment : Fragment() {
 
     private fun observeData() {
         sharedViewModel.resultFilter.observe(viewLifecycleOwner) {
-            sharedViewModel.firstEverRunApp =  true
             rlmRstList = it.fieldsList
             setUpRecyclerView()
          }
@@ -69,8 +68,7 @@ class FilterFragment : Fragment() {
 
     private fun lunchForTheFirstTime() {
         val prefs: SharedPreferences = requireActivity().getSharedPreferences(
-            "com.example.app", Context.MODE_PRIVATE
-        )
+            "com.example.app", Context.MODE_PRIVATE)
 
         if (prefs.getBoolean("firstLunch", true)) {
             Log.e("lunchc","in lunchc" )
