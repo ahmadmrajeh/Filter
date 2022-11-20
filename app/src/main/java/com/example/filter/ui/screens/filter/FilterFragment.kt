@@ -1,13 +1,15 @@
 package com.example.filter.ui.screens.filter
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,7 +19,6 @@ import com.example.datascource.realm.filter.FieledRealm
 import com.example.datascource.realm.filter.RealmOption
 import com.example.filter.databinding.FragmentFilterBinding
 import com.example.filter.ui.adapters.nestead.ParentAdapter
-import com.example.filter.ui.screens.SplashScreenFragmentDirections
 import com.example.filter.ui.screens.viewmodel.MainViewModel
 import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +32,6 @@ class FilterFragment : Fragment() {
     private lateinit var binding: FragmentFilterBinding
     private lateinit var mAdapter: ParentAdapter
     private lateinit var rlmRstList: RealmList<FieledRealm>
-
     private val args: FilterFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -56,17 +56,31 @@ class FilterFragment : Fragment() {
             setUpRecyclerView()
          }
 
-        if (!sharedViewModel.firstEverRunApp) {   sharedViewModel.firstEverRunApp =  true
+
+
+
+        lunchForTheFirstTime()
+
+
+        sharedViewModel.selectedOptions.observe(viewLifecycleOwner){selected: RealmList<RealmOption> ->
+            realmLiveOptions = selected
+        }
+    }
+
+    private fun lunchForTheFirstTime() {
+        val prefs: SharedPreferences = requireActivity().getSharedPreferences(
+            "com.example.app", Context.MODE_PRIVATE
+        )
+
+        if (prefs.getBoolean("firstLunch", true)) {
+            Log.e("lunchc","in lunchc" )
             Handler(Looper.getMainLooper()).postDelayed({
+                prefs.edit().putBoolean("firstLunch", false).apply()
                 findNavController().navigate(
                     FilterFragmentDirections.actionFilterFragmentSelf(args.id)
                 )
+
             }, 1000)
-        }
-
-
-       sharedViewModel.selectedOptions.observe(viewLifecycleOwner){selected: RealmList<RealmOption> ->
-            realmLiveOptions = selected
         }
     }
 

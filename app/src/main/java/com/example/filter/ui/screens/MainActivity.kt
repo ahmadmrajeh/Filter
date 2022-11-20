@@ -1,14 +1,17 @@
 package com.example.filter.ui.screens
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
-import androidx.navigation.fragment.findNavController
+import androidx.appcompat.app.AppCompatActivity
 import com.example.filter.databinding.ActivityMainBinding
 
+
 class MainActivity : AppCompatActivity() {
+
+
+
 private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +30,8 @@ private lateinit var binding: ActivityMainBinding
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 }
 
 
