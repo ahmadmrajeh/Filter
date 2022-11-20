@@ -77,6 +77,4 @@ class ParentHolder(
             binding.parentItemTitle.text = item?.label_ar
         }
     }
-
-
 }

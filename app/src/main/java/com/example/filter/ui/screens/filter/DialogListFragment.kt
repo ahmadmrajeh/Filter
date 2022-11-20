@@ -42,9 +42,11 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
         if (dataType == "numericFrom" || dataType == "numericTo") controlVisibility()
         else {
             binding.cancel.setOnClickListener {
+
                 dismiss()
             }
             binding.reset.setOnClickListener {
+                sharedViewModel.unSelectOtherOptionsInThisField(rlmRsltList?.get(0)?.field_id,dataType)
                 dismiss()
             }
             binding.done.setOnClickListener {

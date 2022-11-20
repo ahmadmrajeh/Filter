@@ -132,7 +132,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private fun unSelectOtherOptionsInThisField(fieldId: String?, fromWhere: String?) {
+     fun unSelectOtherOptionsInThisField(fieldId: String?, fromWhere: String?) {
       val anyList =  selectedOptions.value?.filter {
             it.field_id ==fieldId
         }
@@ -140,7 +140,7 @@ class MainViewModel : ViewModel() {
             for (unselect in anyList)
                   if(unselect.label_en!="Any")   { updateOption(unselect,false,fromWhere)
                   selectedOptions.value?.remove(unselect)
-                  }
+           }
         }
     }
 
