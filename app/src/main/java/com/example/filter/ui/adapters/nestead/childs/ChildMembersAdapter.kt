@@ -34,7 +34,7 @@ internal class ChildMembersAdapter(
         return when (obj?.option_img) {
             null -> VIEW_TYPE_LIST_STRING
             else -> VIEW_TYPE_ICON_STRING
-        }
+       }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -43,7 +43,6 @@ internal class ChildMembersAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         val obj = getItem(position)
         when (holder) {
             is ChildHolderCircle -> {

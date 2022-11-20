@@ -56,7 +56,7 @@ class RealmFilterOperations {
             val realmOptions: RealmList<RealmOption> = RealmList()
             realmOptions.add(
                 RealmOption(
-                    (-1 * temp?.id!!).toString(), "1", countAni.toString(), "اي",
+                    null, "1",   (-1*temp!!.id).toString(), "اي",
                     "Any",
                     null,
                     "", null, null, false, "" ,false
