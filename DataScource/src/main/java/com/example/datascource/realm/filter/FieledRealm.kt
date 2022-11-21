@@ -6,14 +6,14 @@ import io.realm.annotations.PrimaryKey
 
 open class FieledRealm : RealmObject {
     var data_type: String?=""
-    @PrimaryKey
-    var id: Int?=0
+    @PrimaryKey var id: Int?=0
     var name: String?=""
     var parent_id: Int?=0
     var parent_name: String?=""
     var label_ar: String?=""
     var label_en: String?=""
     lateinit var options :RealmList<RealmOption>
+    lateinit var optionsResistance :RealmList<RealmOption>
 
     constructor()
     constructor(
@@ -25,7 +25,7 @@ open class FieledRealm : RealmObject {
         label_ar: String?,
         label_en: String?,
         options: RealmList<RealmOption>,
-
+        optionsResistance: RealmList<RealmOption>
     ) : super() {
         this.data_type = data_type
         this.id = id
@@ -35,7 +35,7 @@ open class FieledRealm : RealmObject {
         this.label_ar = label_ar
         this.label_en = label_en
         this.options = options
-
+        this.optionsResistance = optionsResistance
     }
 
 

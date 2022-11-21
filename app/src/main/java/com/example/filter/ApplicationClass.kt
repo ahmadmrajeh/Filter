@@ -7,10 +7,11 @@ import io.realm.RealmConfiguration
 
 
 class ApplicationClass: Application() {
+
     override fun onCreate() {
         super.onCreate()
         Realm.init (this)
-        val config = RealmConfiguration.Builder().schemaVersion(7).modules(
+        val config = RealmConfiguration.Builder().schemaVersion(8).modules(
            AppModules()
         )
             .deleteRealmIfMigrationNeeded()
@@ -18,8 +19,6 @@ class ApplicationClass: Application() {
             .allowQueriesOnUiThread(true)
             .allowWritesOnUiThread(true)
             .build()
-
         Realm.setDefaultConfiguration(config)
-
     }
 }

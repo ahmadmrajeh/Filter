@@ -31,7 +31,9 @@ class ChildHolderIconDialog(
             .into(binding.iconImg)
         selectLabelLanguage(item)
 
-            binding.checkBox.isChecked = item!!.isSelected
+        if (item != null) {
+            binding.checkBox.isChecked = item.isSelected
+        }
 
             binding.checkBox.setOnClickListener {
                 handleClick(item)
@@ -40,12 +42,14 @@ class ChildHolderIconDialog(
     }
 
     private fun handleClick(item: RealmOption?) {
-        if (item!!.isSelected) {
-            binding.checkBox.isChecked = false
-            listener(item, false)
-        } else {
-            binding.checkBox.isChecked = true
-            listener(item,true)
+        if (item != null) {
+            if (item.isSelected) {
+                binding.checkBox.isChecked = false
+                listener(item, false)
+            } else {
+                binding.checkBox.isChecked = true
+                listener(item,true)
+            }
         }
     }
     private fun selectLabelLanguage(item:RealmOption?) {

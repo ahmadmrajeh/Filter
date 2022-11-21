@@ -7,6 +7,7 @@ import com.example.datascource.realm.category.CatItemRlm
 import com.example.datascource.realm.category.RealmCategoryOperations
 import com.example.datascource.realm.filter.FieledRealm
 import com.example.datascource.realm.filter.RealmFilterOperations
+import com.example.datascource.realm.filter.RealmOption
 import io.realm.Realm
 import io.realm.RealmList
 
@@ -23,9 +24,11 @@ class Repository {
         orderedFields: SearchRes,
         db: Realm,
         id: Int
-    ) {
+    )  {
         val realmFilterOperations = RealmFilterOperations()
-        realmFilterOperations.insertFieldsIntoRealm(optionsAndFields,orderedFields,db,id)
+
+
+     realmFilterOperations.insertFieldsIntoRealm(optionsAndFields,orderedFields,db,id)
 
 
     }

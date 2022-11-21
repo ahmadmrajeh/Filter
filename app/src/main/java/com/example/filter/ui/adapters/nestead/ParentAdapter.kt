@@ -25,7 +25,7 @@ internal class ParentAdapter(
     listener: List<(option: RealmOption, isSelected:Boolean)-> Unit>,
     listener2: List<(options:RealmList<RealmOption>,fromWhere:String)  -> Unit>,
     realmLiveOptions: RealmList<RealmOption>
-) :
+)  :
     RealmRecyclerViewAdapter<FieledRealm?, RecyclerView.ViewHolder>(data, true) {
     private var listOfOptionListeners  = listener
     private var listOfFieldListeners  = listener2
@@ -41,13 +41,13 @@ internal class ParentAdapter(
         val obj = getItem(position)
         when (holder) {
             is ParentHolder -> {
-                holder.bind(obj!!)
+                obj?.let { holder.bind(it) }
             }
             is ParentHolderNumeric -> {
                 holder.bind(obj)
             }
             is ParentHolderGrid -> {
-                holder.bind(obj!!)
+                obj?.let { holder.bind(it) }
             }
         }
     }

@@ -19,7 +19,7 @@ var listener =function
     fun bind(item: RealmOption?) {
 
    binding.root.setOnClickListener {
-      listener( item!!,buttonChoosed )
+       item?.let { it1 -> listener(it1,buttonChoosed ) }
        }
         selectLabelLanguage(item)
    }

@@ -42,9 +42,9 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
         if (dataType == "numericFrom" || dataType == "numericTo") controlVisibility()
         else {
             binding.cancel.setOnClickListener {
-
                 dismiss()
             }
+
             binding.reset.setOnClickListener {
                 sharedViewModel.unSelectOtherOptionsInThisField(rlmRsltList?.get(0)?.field_id,dataType)
                 dismiss()
@@ -60,7 +60,6 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
             setUpRecyclerView()
         }
         return binding.root
-
    }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -107,9 +106,8 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
     }
 
     private fun setUpRecyclerView() {
-        if (rlmRsltList?.isNotEmpty() == true) {
-
-            mAdapter = AdapterDialog(rlmRsltList!!, dataType)
+        if (!rlmRsltList.isNullOrEmpty()) {
+            mAdapter = rlmRsltList?.let { AdapterDialog(it, dataType) }!!
             lifecycleScope.launch(Dispatchers.Main) {
                 binding.recyclerDialig.adapter = mAdapter
                 binding.recyclerDialig.layoutManager = LinearLayoutManager(requireContext())

@@ -19,11 +19,11 @@ class ParentHolderNumeric(
     fun bind(result: FieledRealm?) {
         selectLabelLanguage(result)
         binding.From.setOnClickListener {
-            adapterListener(result!!.options, "numericFrom")
+            result?.let { it1 -> adapterListener(it1.options, "numericFrom") }
         }
 
         binding.To.setOnClickListener {
-            adapterListener(result!!.options, "numericTo")
+            result?.let { it1 -> adapterListener(it1.options, "numericTo") }
         }
 
 

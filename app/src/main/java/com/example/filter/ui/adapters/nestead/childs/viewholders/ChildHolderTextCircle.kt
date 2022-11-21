@@ -33,13 +33,15 @@ class ChildHolderTextCircle(
     }
 
     private fun handleClick(item: RealmOption?) {
-        if (item!!.isSelected
-        ) {
-            notInSelectedItems()
-            listener(item, false)
-        } else {
-            inSelectedItems()
-            listener(item, true)
+        if (item != null) {
+            if (item.isSelected
+            ) {
+                notInSelectedItems()
+                listener(item, false)
+            } else {
+                inSelectedItems()
+                listener(item, true)
+            }
         }
     }
 

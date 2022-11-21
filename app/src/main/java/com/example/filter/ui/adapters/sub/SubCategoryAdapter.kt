@@ -35,7 +35,7 @@ internal class SubCategoryAdapter(
         }
 
         (holder as SubViewHolder).itemView.setOnClickListener {
-            adapterListener(obj!!.id)
+            obj?.let { it1 -> adapterListener(it1.id) }
         }
     }
 

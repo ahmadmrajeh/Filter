@@ -11,7 +11,8 @@ import io.realm.kotlin.executeTransactionAwait
 import kotlinx.coroutines.Dispatchers
 
 class RealmFilterOperations {
-
+   // private val fieldOriginalData = HashMap<String, RealmList<RealmOption>>()
+   private var fieldOriginalData :   RealmList<RealmOption> = RealmList()
     suspend fun insertFieldsIntoRealm(
         optionsAndFields: OptionsResponse,
         orderedFields: SearchRes,
@@ -63,47 +64,71 @@ class RealmFilterOperations {
                     "", null, null, false, "" ,false
                 )
             )
+            fieldOriginalData = RealmList()
 
-            realmOptions.addAll(changeOptionsTypeToRealm(optionsForCurrentField))
+            realmOptions.addAll(changeOptionsTypeToRealm(optionsForCurrentField, temp.id, ))
             temp.let { field ->
                 fieldsRealmList.add(
                     FieledRealm(
                         field.data_type, field.id, field.name, field.parent_id,
-                        field.parent_name, listElem!!.label_ar, listElem.label_en, realmOptions
+                        field.parent_name, listElem!!.label_ar, listElem.label_en, realmOptions ,
+                        fieldOriginalData
                     )
                 )
             }
         }
     }
 
-    private fun changeOptionsTypeToRealm(optionsForCurrentField: List<Option>): RealmList<RealmOption> {
+    private fun changeOptionsTypeToRealm(optionsForCurrentField: List<Option>, id: Int): RealmList<RealmOption> {
         val returnedList: RealmList<RealmOption> = RealmList()
         for (element in optionsForCurrentField) {
 
             if (element.option_img.isNullOrEmpty()) {
-                returnedList.add(
-                    RealmOption(
-                        element.field_id, element.has_child, element.id, element.label,
-                        element.label_en,
-                        null,
-                        element.order, element.parent_id, element.value, false, "",false
-                    )
+
+                val storedOption =     RealmOption(
+                    element.field_id, element.has_child, element.id, element.label,
+                    element.label_en,
+                    null,
+                    element.order, element.parent_id, element.value, false, "",false
                 )
+                decideWhereToSave(element, returnedList, storedOption, id)
+
             } else {
-                returnedList.add(
+                val storedOption =
                     RealmOption(
                         element.field_id, element.has_child, element.id, element.label,
                         element.label_en,
                         "https://opensooqui2.os-cdn.com/api/apiV/android/xxh" + element.option_img,
                         element.order, element.parent_id, element.value, false, "" ,false
                     )
-                )
+
+
+                decideWhereToSave(element, returnedList, storedOption, id)
+
+
             }
 
 
         }
         return returnedList
     }
+
+    private fun decideWhereToSave(
+        element: Option,
+        returnedList: RealmList<RealmOption>,
+        storedOption: RealmOption,
+        id: Int
+    ) {
+        if (element.parent_id.isNullOrEmpty())
+            returnedList.add(storedOption)
+      else{
+            fieldOriginalData.add(storedOption)
+        }
+
+
+
+    }
+
 
     private fun getApiFields(
         optionsAndFields: OptionsResponse,

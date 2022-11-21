@@ -46,7 +46,13 @@ class FilterFragment : Fragment() {
         sharedViewModel.readOfflineCacheFields(args.id)
         sharedViewModel.selectedOptions.value = RealmList()
         observeData()
+
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //
     }
 
     private fun observeData() {
@@ -85,10 +91,9 @@ class FilterFragment : Fragment() {
     private fun setUpRecyclerView() {
         if (rlmRstList.isNotEmpty()) {
             mAdapter = parentAdapterInstance(rlmRstList,realmLiveOptions)
-            lifecycleScope.launch(Dispatchers.Main) {
                 binding.RcyclerFilter.adapter = mAdapter
                 binding.RcyclerFilter.layoutManager = LinearLayoutManager(requireContext())
-            }
+           // sharedViewModel.  initializeFields()
         }
 
     }

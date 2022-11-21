@@ -40,14 +40,16 @@ class ChildHolderGrid(
     }
 
     private fun handleClick(item: RealmOption?) {
-        if (item!!.isSelected
-        ) {
-            notInSelectedItems()
-            listener(item,  false)
+        if (item != null) {
+            if (item.isSelected
+            ) {
+                notInSelectedItems()
+                listener(item,  false)
 
-        } else {
-            inSelectedItems()
-            listener(item,  true)
+            } else {
+                inSelectedItems()
+                listener(item,  true)
+            }
         }
     }
 

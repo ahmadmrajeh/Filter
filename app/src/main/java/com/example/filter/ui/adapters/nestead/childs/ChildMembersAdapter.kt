@@ -46,10 +46,10 @@ internal class ChildMembersAdapter(
         val obj = getItem(position)
         when (holder) {
             is ChildHolderCircle -> {
-                holder.bind(obj!!)
+                obj?.let { holder.bind(it) }
             }
             is ChildHolderTextCircle -> {
-                holder.bind(obj!!)
+                obj?.let { holder.bind(it) }
             }
         }
     }

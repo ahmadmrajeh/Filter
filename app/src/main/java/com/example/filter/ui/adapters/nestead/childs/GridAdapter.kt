@@ -28,7 +28,7 @@ internal class GridAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
-        (holder as ChildHolderGrid).bind(obj!!)
+        obj?.let { (holder as ChildHolderGrid).bind(it) }
 
     }
 
