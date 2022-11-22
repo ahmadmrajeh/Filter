@@ -21,6 +21,7 @@ class RealmCategoryOperations {
             db.executeTransactionAwait(Dispatchers.IO) {
                 val categories = ResultCatRealm().apply {
                     items = itemToDatabase
+                    id = 0
                 }
 
                 it.insertOrUpdate(categories)
@@ -67,8 +68,15 @@ class RealmCategoryOperations {
                 )
             )
         }
-
         return itemInRealm
-
     }
+
+    fun readOfflineCacheCategoriesAndSub(db: Realm): ResultCatRealm? {
+            val data = db.where(ResultCatRealm::class.java)?.findFirst()
+       // db.close()
+           return data
+        }
+
+
+
 }

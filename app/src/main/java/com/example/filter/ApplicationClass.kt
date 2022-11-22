@@ -10,15 +10,6 @@ class ApplicationClass: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Realm.init (this)
-        val config = RealmConfiguration.Builder().schemaVersion(8).modules(
-           AppModules()
-        )
-            .deleteRealmIfMigrationNeeded()
-            .name("realm.db")
-            .allowQueriesOnUiThread(true)
-            .allowWritesOnUiThread(true)
-            .build()
-        Realm.setDefaultConfiguration(config)
+
     }
 }

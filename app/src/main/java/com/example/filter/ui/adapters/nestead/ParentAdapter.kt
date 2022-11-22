@@ -53,7 +53,7 @@ internal class ParentAdapter(
     }
 
     override fun getItemId(index: Int): Long {
-        return getItem(index)!!.id!!.toLong()
+        return getItem(index)?.id?.toLong()?:0L
     }
 
 

@@ -49,7 +49,6 @@ internal class AdapterDialog(
                     fromWhere
                 )
             }
-
             else -> {
                 val view = inflater.inflate(R.layout.text_grandchild, parent, false)
                 val binding = TextGrandchildBinding.bind(view)
@@ -74,7 +73,7 @@ internal class AdapterDialog(
     }
 
     override fun getItemId(index: Int): Long {
-        return getItem(index)!!.id!!.toLong()
+        return getItem(index)?.id?.toLong()?:0L
     }
 
     override fun getItemViewType(position: Int): Int {

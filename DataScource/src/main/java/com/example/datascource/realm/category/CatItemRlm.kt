@@ -2,11 +2,12 @@ package com.example.datascource.realm.category
 
 import io.realm.RealmList
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
 open class CatItemRlm : RealmObject {
     var has_child: Int= 0
     var icon: String =""
-    var id: Int= 0
+ @PrimaryKey   var id: Int= 0
     var label: String=""
     var label_ar: String=""
     var label_en: String=""

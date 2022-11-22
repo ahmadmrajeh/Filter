@@ -24,7 +24,6 @@ import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class FilterFragment : Fragment() {
 
     private   var realmLiveOptions: RealmList<RealmOption> = RealmList()
@@ -40,19 +39,17 @@ class FilterFragment : Fragment() {
     ): View {
         binding = FragmentFilterBinding.inflate(inflater)
         requireActivity().title = "Filter"
-        sharedViewModel.subFlowJsonToKotlin (
-            requireContext().applicationContext, args.id
-        )
-        sharedViewModel.readOfflineCacheFields(args.id)
-        sharedViewModel.selectedOptions.value = RealmList()
+        sharedViewModel.offlineCacheFilterFields(args.id)
         observeData()
-
+        sharedViewModel.readOfflineCacheFields(args.id)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //
+    override fun onDestroy() {
+        super.onDestroy()
+  /*      sharedViewModel.subFlowJsonToKotlin (
+            requireContext().applicationContext, args.id
+        )*/
     }
 
     private fun observeData() {
@@ -60,10 +57,6 @@ class FilterFragment : Fragment() {
             rlmRstList = it.fieldsList
             setUpRecyclerView()
          }
-
-
-
-
         lunchForTheFirstTime()
 
 
@@ -83,7 +76,6 @@ class FilterFragment : Fragment() {
                 findNavController().navigate(
                     FilterFragmentDirections.actionFilterFragmentSelf(args.id)
                 )
-
             }, 1000)
         }
     }
@@ -95,7 +87,6 @@ class FilterFragment : Fragment() {
                 binding.RcyclerFilter.layoutManager = LinearLayoutManager(requireContext())
            // sharedViewModel.  initializeFields()
         }
-
     }
 
     private fun parentAdapterInstance(
