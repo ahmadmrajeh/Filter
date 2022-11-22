@@ -49,7 +49,6 @@ internal class AdapterDialog(
                     fromWhere
                 )
             }
-
             else -> {
                 val view = inflater.inflate(R.layout.text_grandchild, parent, false)
                 val binding = TextGrandchildBinding.bind(view)

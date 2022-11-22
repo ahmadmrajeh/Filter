@@ -46,32 +46,28 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
             }
 
             binding.reset.setOnClickListener {
-                sharedViewModel.unSelectOtherOptionsInThisField(rlmRsltList?.get(0)?.field_id,dataType)
-                dismiss()
+                sharedViewModel.unSelectOtherOptionsInThisField(
+                    rlmRsltList?.get(0)?.field_id,
+                    dataType
+                )
+                //dismiss()
             }
             binding.done.setOnClickListener {
                 dismiss()
             }
         }
 
-
         sharedViewModel.selectedOptions.observe(viewLifecycleOwner) { selected: RealmList<RealmOption> ->
             realmLiveOptions = selected
             setUpRecyclerView()
         }
         return binding.root
-   }
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun numericButtonsColor() {
         if (dataType == "numericFrom") fromClicked()
         else toClicked()
-        binding.From.setOnClickListener {
-            fromClicked()
-        }
-        binding.To.setOnClickListener {
-            toClicked()
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -80,7 +76,6 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
             .getDrawable(requireContext(), R.drawable.blu_btn)
         binding.From.foreground = ContextCompat
             .getDrawable(requireContext(), R.drawable.blu_white)
-        dataType ="numericTo"
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -89,8 +84,9 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
             .getDrawable(requireContext(), R.drawable.blu_btn)
         binding.To.foreground = ContextCompat
             .getDrawable(requireContext(), R.drawable.blu_white)
-        dataType ="numericFrom"
-    }
+
+
+           }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun controlVisibility() {
@@ -100,14 +96,16 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
         binding.reset.visibility = View.GONE
         binding.done.text = getString(R.string.cancel)
         binding.done.setOnClickListener {
-            dismiss()
+        dismiss()
         }
         numericButtonsColor()
     }
 
     private fun setUpRecyclerView() {
         if (!rlmRsltList.isNullOrEmpty()) {
-            mAdapter = rlmRsltList?.let { AdapterDialog(it, dataType) }!!
+            mAdapter = rlmRsltList.let {
+                AdapterDialog(it, dataType)
+            }
             lifecycleScope.launch(Dispatchers.Main) {
                 binding.recyclerDialig.adapter = mAdapter
                 binding.recyclerDialig.layoutManager = LinearLayoutManager(requireContext())
@@ -115,20 +113,22 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
         }
     }
 
-    private fun AdapterDialog(data: RealmList<RealmOption>, comingFrom: String): AdapterDialog {
-        return AdapterDialog(data, comingFrom, listOf(
-            { option , selection  ->
-                handleOptionPressed(option,selection)
-
-            }, { option , selection ->
-                handleOptionPressed(option,selection)
-            },
-        ),
+    private fun AdapterDialog(data: RealmList<RealmOption>?, comingFrom: String): AdapterDialog {
+        return AdapterDialog(
+            data, comingFrom, listOf(
+                { option, selection ->
+                    handleOptionPressed(option, selection)
+                },
+                { option, selection ->
+                    handleOptionPressed(option, selection)
+                },
+            ),
             { option, selectedFrom -> //numeric
-            handleNumericChanged(option, selectedFrom)
-            dismiss()
-        },
-            realmLiveOptions)
+                handleNumericChanged(option, selectedFrom)
+                dismiss()
+            },
+            realmLiveOptions
+        )
     }
 
     private fun handleNumericChanged(option: RealmOption, selectedFrom: String) {
@@ -138,20 +138,19 @@ class DialogListFragment(obj: RealmList<RealmOption>, type: String) : DialogFrag
 
         temp?.let {
             sharedViewModel.selectedOptions.value?.remove(it)
-            sharedViewModel.updateOption(option, false,selectedFrom)
+            sharedViewModel.updateOption(option, false, selectedFrom)
         }
-        sharedViewModel.updateOption(option, true,selectedFrom)
+        sharedViewModel.updateOption(option, true, selectedFrom)
         sharedViewModel.selectedOptions.value?.add(option)
     }
 
-    private fun handleOptionPressed(option:RealmOption, isSelected:Boolean) {
-        if ( isSelected/* insert*/) {
-            sharedViewModel.updateOption(option, true, "" )
+    private fun handleOptionPressed(option: RealmOption, isSelected: Boolean) {
+        if (isSelected/* insert*/) {
+            sharedViewModel.updateOption(option, true, "")
             sharedViewModel.selectedOptions.value?.add(option)
 
-
-        } else  {
-            sharedViewModel.updateOption(option, false, "" )
+        } else {
+            sharedViewModel.updateOption(option, false, "")
             sharedViewModel.selectedOptions.value?.remove(option)
         }
     }

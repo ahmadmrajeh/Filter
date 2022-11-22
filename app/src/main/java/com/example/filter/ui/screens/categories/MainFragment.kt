@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -30,7 +31,6 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
 
     ): View {
-
         requireActivity().title = "Select Category"
         binding = FragmentMainBinding.inflate(inflater)
         sharedViewModel.readOfflineCacheCategoriesAndSub()

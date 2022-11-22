@@ -21,14 +21,12 @@ class  ParentHolderGrid(
 
     fun bind(result: FieledRealm) {
         selectLabelLanguage(result)
-        val childMembers = GridAdapter(result?.options,
+        val childMembers = GridAdapter(result.options,
                             adapterListener ,realmLiveOptions)
         val layoutManager = FlexboxLayoutManager(itemView.context)
         layoutManager.flexDirection = FlexDirection.ROW
-        layoutManager.justifyContent = JustifyContent.CENTER
+        layoutManager.justifyContent = JustifyContent.FLEX_START
         layoutManager.flexWrap=FlexWrap.WRAP
-
-
         binding.childRecyclerview.adapter = childMembers
         binding.childRecyclerview .layoutManager =  layoutManager
     }
