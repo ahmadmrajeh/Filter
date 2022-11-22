@@ -75,6 +75,7 @@ import kotlinx.coroutines.launch
         modelItem: com.example.datascource.model
         .categAndSub.SooqFilterModel
     ) {
+
         viewModelScope.launch(Dispatchers.IO) {
             apiDataCategory = repository.apiDataCategory(modelItem)
             val realmWrite = Realm.getDefaultInstance()
@@ -100,8 +101,10 @@ import kotlinx.coroutines.launch
         fromWhere: String?
     ) {
         val realmWrite = Realm.getDefaultInstance()
-     val option = realmWrite.copyFromRealm(optionActive)
+        val option = realmWrite.copyFromRealm(optionActive)
         realmWrite.close()
+
+
 
         viewModelScope.launch(Dispatchers.IO) {
         val  db = Realm.getDefaultInstance()
@@ -131,16 +134,18 @@ import kotlinx.coroutines.launch
     }
 
      fun unSelectOtherOptionsInThisField(fieldId: String?, fromWhere: String?) {
-       val anyList =  selectedOptions.value?.filter {
-            it.field_id ==fieldId
-        }
-        if (anyList != null) {
-            for (unselect in anyList)
-                  if(unselect.label_en!="Any")   {
-                      updateOption(unselect,false,fromWhere)
-                  selectedOptions.value?.remove(unselect)
-           }
-        }
+         viewModelScope.launch(Dispatchers.Main) {
+             val anyList = selectedOptions.value?.filter {
+                 it.field_id == fieldId
+             }
+             if (anyList != null) {
+                 for (unselect in anyList)
+                     if (unselect.label_en != "Any") {
+                         updateOption(unselect, false, fromWhere)
+                         selectedOptions.value?.remove(unselect)
+                     }
+             }
+         }
     }
 
         private fun updateChildOptions(
